@@ -1,0 +1,295 @@
+﻿<!doctype html>
+<html lang='pt-BR'>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>PROGRAMAÇÃO STC</title>
+<style>
+body{font-family:Arial,Helvetica,sans-serif;background:#f4f4f4;margin:0;color:#111}
+.app{width:320px;max-width:100%;min-height:100vh;margin:0 auto;background:#e9e9e9;border-left:1px solid #0b8457;border-right:1px solid #0b8457}
+.topbar{height:55px;background:#18845b;color:#fff;display:flex;align-items:center;justify-content:center;padding:0 12px;box-sizing:border-box}
+.headText{flex:1;text-align:center;line-height:1.15;min-width:0}
+.headTitle{font-size:18px;font-weight:900;white-space:nowrap}
+.headSub{font-size:10px;font-weight:400;margin-top:4px;white-space:nowrap}
+.backBtn{width:48px;text-align:center;font-size:11px;font-weight:700;cursor:pointer;flex:0 0 48px}
+.backIcon svg{width:28px;height:28px;display:block;margin:0 auto 1px}
+.pageTitle{background:#e9e9e9;text-align:center;font-size:16px;font-weight:900;padding:11px 0 7px}
+.summaryWrap{padding:0 13px 14px}
+.teamCard{background:#fff;border-radius:15px;padding:14px 14px 10px;margin:10px 0 14px;box-shadow:0 5px 10px rgba(0,0,0,.28);cursor:pointer}
+.teamTop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px}
+.teamName{font-size:16px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.teamActivity{font-size:16px;font-weight:700;color:#18845b;text-align:right;white-space:nowrap;max-width:95px;overflow:hidden;text-overflow:ellipsis}
+.teamFooter{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:7px}
+.teamTotal{font-size:13px;color:#111;white-space:nowrap}
+.teamMembers{font-size:12px;color:#111;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:170px}
+.teamStats{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.statBox{background:#e9e9e9;border-radius:8px;text-align:center;padding:8px 2px 6px;color:#08794f;font-size:16px;font-weight:900;line-height:1}
+.statBox span{display:block;color:#111;font-size:10px;font-weight:400;margin-top:5px}
+.statBox.venc{color:#f0443e}
+.detailHead{background:#18845b;color:#fff;display:flex;align-items:center;height:56px;padding:0 7px 0 14px;box-sizing:border-box}
+.detailTitle{font-size:18px;font-weight:900;flex:1;white-space:nowrap;overflow:hidden;text-align:left;min-width:0;padding-right:8px}
+.teamLine{display:flex;justify-content:space-between;padding:13px 30px 5px;font-size:16px}
+.teamLine b{font-weight:900}
+.cardsWrap{padding:0 18px 18px}
+.card{background:#fff;border-radius:28px;padding:18px 18px 16px;margin:9px 0 20px;box-shadow:0 5px 9px rgba(0,0,0,.28);font-size:14px}
+.nota{font-size:15px;font-weight:900}
+.servico{font-size:12px;margin-top:1px}
+.cidade{font-size:15px;margin-top:10px}
+.cidade b{font-weight:900}
+.rua{font-size:14px;margin-top:1px}
+.pillRow{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
+.pill{background:#e9e9e9;border-radius:6px;padding:8px 13px;font-size:12px;box-sizing:border-box}
+.pill.md{background:#e94b42;color:#fff;font-weight:900}
+.medidor{font-size:12px;font-weight:900;margin-top:12px;text-transform:uppercase}
+.dateStatus{margin-top:10px;border-radius:5px;padding:7px;text-align:center;font-size:13px}
+.dateStatus.due{background:#e9473f;color:#fff}
+.dateStatus.next{background:#f2c84b;color:#000}
+.dateStatus.normal{background:#e9e9e9;color:#111}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}
+.btn{border:none;border-radius:6px;padding:8px 0;font-size:14px;font-weight:900;cursor:pointer}
+.btn.ghost{background:#e9e9e9;color:#08794f}
+.btn.ok{background:#18845b;color:#fff}
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9999}
+.modal-content{background:#fff;border-radius:12px;width:88%;max-width:420px;max-height:82vh;overflow:auto;padding:18px;box-shadow:0 5px 12px rgba(0,0,0,.35)}
+.modal h3{margin:0 0 12px;color:#18845b}
+.modal p{margin:7px 0;font-size:14px}
+.modalClose{margin-top:12px;width:100%;background:#18845b;color:#fff;border:none;border-radius:8px;padding:9px;font-weight:900}
+@media(min-width:700px){.app{margin:10px auto}}
+</style>
+</head>
+<body>
+<div class='app'>
+<section id='viewResumo'>
+<div class='topbar'>
+<div class='headText'>
+<div class='headTitle'>UTD SERIDÓ</div>
+<div class='headSub' id='dataHoraAtual'>Última atualização: 31/07/2026 11:00:46</div>
+</div>
+</div>
+<div class='pageTitle'>PROGRAMAÇÃO STC</div>
+<div class='summaryWrap'>
+<div class='teamCard' data-equipe='STCCCO0001'><div class='teamTop'><div class='teamName'>STCCCO0001</div><div class='teamActivity'>STC</div></div><div class='teamStats'><div class='statBox venc'>0<span>Venc/dia</span></div><div class='statBox'>4<span>Trif</span></div><div class='statBox'>6<span>Mono</span></div><div class='statBox'>2<span>200A</span></div></div><div class='teamFooter'><div class='teamTotal'>10 notas</div><div class='teamMembers'>Isaac / Lindemberg</div></div></div>
+<div class='teamCard' data-equipe='STCCCO0003'><div class='teamTop'><div class='teamName'>STCCCO0003</div><div class='teamActivity'>Inspeção</div></div><div class='teamStats'><div class='statBox venc'>0<span>Venc/dia</span></div><div class='statBox'>0<span>Trif</span></div><div class='statBox'>0<span>Mono</span></div><div class='statBox'>0<span>200A</span></div></div><div class='teamFooter'><div class='teamTotal'>7 notas</div><div class='teamMembers'>Deives / Priscilia</div></div></div>
+<div class='teamCard' data-equipe='STCCRN0002'><div class='teamTop'><div class='teamName'>STCCRN0002</div><div class='teamActivity'>STC</div></div><div class='teamStats'><div class='statBox venc'>4<span>Venc/dia</span></div><div class='statBox'>0<span>Trif</span></div><div class='statBox'>9<span>Mono</span></div><div class='statBox'>0<span>200A</span></div></div><div class='teamFooter'><div class='teamTotal'>9 notas</div><div class='teamMembers'>Cristiano / Ralny</div></div></div>
+<div class='teamCard' data-equipe='STCCRN0003'><div class='teamTop'><div class='teamName'>STCCRN0003</div><div class='teamActivity'>STC</div></div><div class='teamStats'><div class='statBox venc'>2<span>Venc/dia</span></div><div class='statBox'>1<span>Trif</span></div><div class='statBox'>8<span>Mono</span></div><div class='statBox'>0<span>200A</span></div></div><div class='teamFooter'><div class='teamTotal'>9 notas</div><div class='teamMembers'>Walerio / Ayara</div></div></div>
+<div class='teamCard' data-equipe='STCPLH0001'><div class='teamTop'><div class='teamName'>STCPLH0001</div><div class='teamActivity'>STC</div></div><div class='teamStats'><div class='statBox venc'>0<span>Venc/dia</span></div><div class='statBox'>1<span>Trif</span></div><div class='statBox'>9<span>Mono</span></div><div class='statBox'>0<span>200A</span></div></div><div class='teamFooter'><div class='teamTotal'>10 notas</div><div class='teamMembers'>Sebastião / Petrucyo</div></div></div>
+<div class='teamCard' data-equipe='STCPLH0002'><div class='teamTop'><div class='teamName'>STCPLH0002</div><div class='teamActivity'>STC</div></div><div class='teamStats'><div class='statBox venc'>0<span>Venc/dia</span></div><div class='statBox'>0<span>Trif</span></div><div class='statBox'>8<span>Mono</span></div><div class='statBox'>0<span>200A</span></div></div><div class='teamFooter'><div class='teamTotal'>8 notas</div><div class='teamMembers'>Pedro / Jardel</div></div></div>
+<div class='teamCard' data-equipe='STCSTU0002'><div class='teamTop'><div class='teamName'>STCSTU0002</div><div class='teamActivity'>STC</div></div><div class='teamStats'><div class='statBox venc'>1<span>Venc/dia</span></div><div class='statBox'>0<span>Trif</span></div><div class='statBox'>9<span>Mono</span></div><div class='statBox'>0<span>200A</span></div></div><div class='teamFooter'><div class='teamTotal'>9 notas</div><div class='teamMembers'>Valter / Eliakim</div></div></div>
+
+</div>
+</section>
+<section id='viewDetalhe' style='display:none'>
+<div class='detailHead'>
+<div class='detailTitle'>PROGRAMAÇÃO STC</div>
+<div class='backBtn' onclick='voltarResumo()'><div class='backIcon'><svg viewBox='0 0 24 24' fill='white' xmlns='http://www.w3.org/2000/svg'><path d='M3 10.5L12 3l9 7.5v10a1 1 0 0 1-1 1h-5.5v-6h-5v6H4a1 1 0 0 1-1-1v-10z'/></svg></div><div>Voltar</div></div>
+</div>
+<div class='teamLine'><b id='equipeSelecionada'></b><span id='qtdEquipe'></span></div>
+<div id='cards' class='cardsWrap'></div>
+</section>
+<table id='tblNotas' style='display:none'><tbody>
+<tr data-equipe='STCCCO0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='' data-disjuntor='32(A)' data-de='TRIF' data-para='TRIF' data-carga='7' data-nota='4601588133' data-venc='03/08/2026' data-tipo='Alteração Contratual                    ' data-cidade='CAICO                  ' data-bairro='BATENTES                           ' data-rua='PO BATENTES' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502066726' data-venc='03/08/2026' data-tipo='Reativação BT                           ' data-cidade='CAICO                  ' data-bairro='CENTRO                             ' data-rua='RUA MONSENHOR SEVERIANO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502067786' data-venc='03/08/2026' data-tipo='Reativação BT                           ' data-cidade='CAICO                  ' data-bairro='JOAO XXIII                         ' data-rua='RUA JOSE MARIA GONCALVES VALE' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502060446' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='CAICO                  ' data-bairro='WALFREDO GURGEL                    ' data-rua='RUA VENICE DINIZ' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='MD200A' data-cabocosern='50 ou 70mm AL' data-cabocliente='50XLPE ou 70PVC' data-disjuntor='125(A)' data-de='TRIF' data-para='TRIF' data-carga='75' data-nota='4502041895' data-venc='03/08/2026' data-tipo='Ligação BT Junto com Conexão GD Micro   ' data-cidade='CAICO                  ' data-bairro='ZONA RURAL                         ' data-rua='SI PIATO' data-medidoruso='' data-md200a='1'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='MD200A' data-cabocosern='50 ou 70mm AL' data-cabocliente='50XLPE ou 70PVC' data-disjuntor='125(A)' data-de='TRIF' data-para='TRIF' data-carga='75' data-nota='4502065939' data-venc='03/08/2026' data-tipo='Ligação BT Junto com Conexão GD Micro   ' data-cidade='CAICO                  ' data-bairro='ZONA RURAL                         ' data-rua='SI PIATO' data-medidoruso='' data-md200a='1'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502060461' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='CAICO                  ' data-bairro='ZONA RURAL                         ' data-rua='SI RETIRO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502061948' data-venc='04/08/2026' data-tipo='Reativação BT                           ' data-cidade='CAICO                  ' data-bairro='ACAMPAMENTO                        ' data-rua='RUA PRESIDENTE KENNEDY' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='' data-disjuntor='32(A)' data-de='TRIF' data-para='TRIF' data-carga='9,68' data-nota='4601578393' data-venc='04/08/2026' data-tipo='Modificação BT - Conexão GD Micro       ' data-cidade='CAICO                  ' data-bairro='CAEIRA                             ' data-rua='PO CAEIRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502068547' data-venc='04/08/2026' data-tipo='Reativação BT                           ' data-cidade='CAICO                  ' data-bairro='CENTRO                             ' data-rua='RUA JOAQUIM GORGONIO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0003' data-medidoratual='' data-cabocosern='' data-cabocliente='' data-disjuntor='' data-de='' data-para='' data-carga='' data-nota='4801303566' data-venc='' data-tipo='Alt. Horário Irrigante' data-cidade='CAICO' data-bairro='PO BELEM 30' data-rua='BELEM' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0003' data-medidoratual='' data-cabocosern='' data-cabocliente='' data-disjuntor='' data-de='' data-para='' data-carga='' data-nota='4801301195' data-venc='' data-tipo='Alt. Horário Irrigante' data-cidade='SERRA NEGRA DO NORTE' data-bairro='FZ CONCEICAO 20' data-rua='ZONA RURAL' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0003' data-medidoratual='' data-cabocosern='' data-cabocliente='' data-disjuntor='' data-de='' data-para='' data-carga='' data-nota='4801296540' data-venc='' data-tipo='Alt. Horário Irrigante' data-cidade='JARDIM DE PIRANHAS' data-bairro='SI CRUZ 12' data-rua='ZONA RURAL' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0003' data-medidoratual='' data-cabocosern='' data-cabocliente='' data-disjuntor='' data-de='' data-para='' data-carga='' data-nota='2000691736' data-venc='24/07/2026' data-tipo='Acompanhamento Cortados - PROPRIO   ' data-cidade='JARDIM DE PIRANHAS' data-bairro='SI TIMBAUBINHA 6                             ' data-rua='ZONA RURAL' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0003' data-medidoratual='' data-cabocosern='' data-cabocliente='' data-disjuntor='' data-de='' data-para='' data-carga='' data-nota='2000696536' data-venc='24/07/2026' data-tipo='Acompanhamento Cortados - PROPRIO   ' data-cidade='JARDIM DE PIRANHAS' data-bairro='RUA EMELIANO FERREIRA DE PAIVA 22            ' data-rua='FLORESTA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0003' data-medidoratual='' data-cabocosern='' data-cabocliente='' data-disjuntor='' data-de='' data-para='' data-carga='' data-nota='2000696027' data-venc='24/07/2026' data-tipo='Acompanhamento Cortados - PROPRIO   ' data-cidade='CAICO' data-bairro='PO BARRA DA ESPINGARDA 30                    ' data-rua='BARRA DA ESPINGARDA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCCO0003' data-medidoratual='' data-cabocosern='' data-cabocliente='' data-disjuntor='' data-de='' data-para='' data-carga='' data-nota='2000691737' data-venc='24/07/2026' data-tipo='Acompanhamento Cortados - PROPRIO   ' data-cidade='CAICO' data-bairro='PO BARRA DA ESPINGARDA 28                    ' data-rua='BARRA DA ESPINGARDA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502032270' data-venc='31/07/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='AV DOIS' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502061263' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='RUA ABDIAS ADONIAS DE FARIAS' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502067816' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='RUA CICERA RODRIGUES GONZAGA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502060957' data-venc='31/07/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='RUA CICERO RODRIGUES DE OLIVEIRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502069992' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='RUA GERALDO ALVES' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502064265' data-venc='31/07/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='RUA LUIZ GERALDO NETO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502068540' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='RUA RAIMUNDO ESTEVAM TEIXEIRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502049620' data-venc='03/08/2026' data-tipo='Reativação BT                           ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='TV PEDRO SEVERINO BEZERRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502067736' data-venc='31/07/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='PARAISO                            ' data-rua='TV SAO BRAZ' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502067156' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='CONEGO MONTE                       ' data-rua='RUA PAPA JOAO PAULO II' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502060417' data-venc='31/07/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='CONEGO MONTE                       ' data-rua='SI PEDRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502064933' data-venc='03/08/2026' data-tipo='Reativação BT                           ' data-cidade='SANTA CRUZ             ' data-bairro='ALEGRE                             ' data-rua='RUA JOSE FONSECA DA COSTA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502065866' data-venc='31/07/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='ALTO DO COLINA                     ' data-rua='RUA SANTA CRUZ' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502065481' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='BARRO VERMELHO                     ' data-rua='RUA CORONEL JULIO PINHEIRO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='' data-disjuntor='32(A)' data-de='MONO' data-para='TRIF' data-carga='18' data-nota='4601587853' data-venc='03/08/2026' data-tipo='Alteração Contratual                    ' data-cidade='SANTA CRUZ             ' data-bairro='BARRO VERMELHO                     ' data-rua='RUA JOSE VENCESLAU DA COSTA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='16mm AL' data-cabocliente='' data-disjuntor='63(A)' data-de='MONO' data-para='MONO' data-carga='' data-nota='4502069005' data-venc='03/08/2026' data-tipo='Ligação Nova BT MUC                     ' data-cidade='SANTA CRUZ             ' data-bairro='CENTRO                             ' data-rua='RUA PASTOR FRANCISCO BEZERRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='16mm AL' data-cabocliente='' data-disjuntor='63(A)' data-de='MONO' data-para='MONO' data-carga='' data-nota='4502066742' data-venc='03/08/2026' data-tipo='Ligação Nova BT MUC                     ' data-cidade='SANTA CRUZ             ' data-bairro='CENTRO                             ' data-rua='RUA PASTOR FRANCISCO BEZERRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCCRN0003' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502069515' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='CENTRO                             ' data-rua='RUA SENADOR JOAO CAMARA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502064292' data-venc='03/08/2026' data-tipo='Reativação BT                           ' data-cidade='CURRAIS NOVOS          ' data-bairro='CENTRO                             ' data-rua='RUA CAPITAO-MOR GALVAO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502068115' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='CURRAIS NOVOS          ' data-bairro='DOUTOR SILVIO BEZERRA DE MELO      ' data-rua='AV PRESIDENTE GETULIO VARGAS' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502064290' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='CURRAIS NOVOS          ' data-bairro='ZONA RURAL                         ' data-rua='SI CATUNDA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502067631' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='CURRAIS NOVOS          ' data-bairro='LIBERDADE                          ' data-rua='PO LIBERDADE' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='16mm AL' data-cabocliente='N/A' data-disjuntor='63(A)' data-de='MONO' data-para='MONO' data-carga='15' data-nota='4601594549' data-venc='05/08/2026' data-tipo='Modificação BT - Conexão GD Micro       ' data-cidade='CURRAIS NOVOS          ' data-bairro='ANTONIO RAFAEL                     ' data-rua='RUA DOUTOR ANTONIO OTHON FILHO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='16mm AL' data-cabocliente='N/A' data-disjuntor='63(A)' data-de='MONO' data-para='MONO' data-carga='15' data-nota='4601596627' data-venc='05/08/2026' data-tipo='Modificação BT - Conexão GD Micro       ' data-cidade='CURRAIS NOVOS          ' data-bairro='CORONEL MANOEL SALUSTINO           ' data-rua='RUA JOSE CARLOS FERREIRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='' data-disjuntor='32(A)' data-de='TRIF' data-para='TRIF' data-carga='18,4' data-nota='4502067880' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='CURRAIS NOVOS          ' data-bairro='DOUTOR SILVIO BEZERRA DE MELO      ' data-rua='AV PRESIDENTE GETULIO VARGAS' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502070019' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='CURRAIS NOVOS          ' data-bairro='DOUTOR SILVIO BEZERRA DE MELO      ' data-rua='RUA MANOEL VICENTE' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502064340' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='CURRAIS NOVOS          ' data-bairro='GOV RADIR PEREIRA DE ARAUJO        ' data-rua='RUA MANOEL FELIX' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0001' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4601597320' data-venc='05/08/2026' data-tipo='Modificação BT - Conexão GD Micro       ' data-cidade='CURRAIS NOVOS          ' data-bairro='JK                                 ' data-rua='RUA LYEBERT TELLES PINHEIRO DOS SANTOS' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502064314' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='PARELHAS               ' data-bairro='ZONA RURAL                         ' data-rua='SI SUSSUARANA II' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502064328' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='PARELHAS               ' data-bairro='BOQUEIRAO                          ' data-rua='RUA JOSE PEREIRA DA SILVA FILHO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502061963' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='PARELHAS               ' data-bairro='BOQUEIRAO                          ' data-rua='RUA PADRE ATAIDE PEREIRA DA SILVA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502069056' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='PARELHAS               ' data-bairro='CENTRO                             ' data-rua='AV DOUTOR MAURO MEDEIROS' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='2,5' data-nota='4601595360' data-venc='05/08/2026' data-tipo='Modificação BT - Conexão GD Micro       ' data-cidade='PARELHAS               ' data-bairro='JOSE CLOVIS DE MEDEIROS            ' data-rua='RUA JOSE ANGELO DANTAS' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='8' data-nota='4502067873' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='PARELHAS               ' data-bairro='JOSE CLOVIS DE MEDEIROS            ' data-rua='RUA SERGIO MATIAS DE AZEVEDO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502069582' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='PARELHAS               ' data-bairro='JOSE CLOVIS DE MEDEIROS            ' data-rua='RUA SERGIO MATIAS DE AZEVEDO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCPLH0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502061721' data-venc='05/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='PARELHAS               ' data-bairro='MARIA TERCEIRA                     ' data-rua='TV ANTONIO ADONIS DOS SANTOS' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='6' data-nota='4502038523' data-venc='31/07/2026' data-tipo='Reativação BT                           ' data-cidade='SANTA CRUZ             ' data-bairro='ZONA RURAL                         ' data-rua='SI SANTA HELENA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502065912' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='ZONA RURAL                         ' data-rua='SI AROEIRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502067141' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='ZONA RURAL                         ' data-rua='SI BOM SUCESSO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502068528' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='ZONA RURAL                         ' data-rua='SI BOM SUCESSO' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='16mm AL' data-cabocliente='N/A' data-disjuntor='63(A)' data-de='MONO' data-para='MONO' data-carga='12' data-nota='4601592282' data-venc='03/08/2026' data-tipo='Alteração Contratual                    ' data-cidade='SANTA CRUZ             ' data-bairro='MARACUJA                           ' data-rua='RUA FRANCISCO SILVESTRE DA SILVA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4502069012' data-venc='04/08/2026' data-tipo='Reativação BT                           ' data-cidade='SANTA CRUZ             ' data-bairro='MARACUJA                           ' data-rua='RUA JOAQUIM CAMARAO DE OLIVEIRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='16mm AL' data-cabocliente='N/A' data-disjuntor='63(A)' data-de='MONO' data-para='MONO' data-carga='12' data-nota='4502066757' data-venc='04/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='MARACUJA                           ' data-rua='RUA JOSE PALHARES' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='10' data-nota='4502067136' data-venc='03/08/2026' data-tipo='Ligação Nova BT                         ' data-cidade='SANTA CRUZ             ' data-bairro='MARACUJA                           ' data-rua='RUA MARIA CAROLINE BEZERRA' data-medidoruso='' data-md200a='0'></tr>
+<tr data-equipe='STCSTU0002' data-medidoratual='' data-cabocosern='10mm AL' data-cabocliente='N/A' data-disjuntor='40(A)' data-de='MONO' data-para='MONO' data-carga='9' data-nota='4601595550' data-venc='04/08/2026' data-tipo='Alteração Contratual                    ' data-cidade='SANTA CRUZ             ' data-bairro='MARACUJA                           ' data-rua='RUA MARIA CAROLINE BEZERRA' data-medidoruso='' data-md200a='0'></tr>
+
+</tbody></table>
+<script>
+var allData=[];
+function pad(n){return String(n).padStart(2,'0');}
+function somenteDataBR(s){
+ if(!s)return '';
+ s=String(s).trim();
+ var m=s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+ if(!m)return '';
+ return pad(parseInt(m[1],10))+'/'+pad(parseInt(m[2],10))+'/'+m[3];
+}
+function parseBRDate(s){
+ s=somenteDataBR(s);
+ if(!s)return null;
+ var p=s.split('/');
+ if(p.length!==3)return null;
+ var d=new Date(parseInt(p[2],10),parseInt(p[1],10)-1,parseInt(p[0],10));
+ if(isNaN(d.getTime()))return null;
+ d.setHours(0,0,0,0);
+ return d;
+}
+function dateInfo(s){
+ var d=parseBRDate(s);
+ if(!d)return {ord:99999,cls:'normal',label:s||'Sem data'};
+ var h=new Date();
+ h.setHours(0,0,0,0);
+ var diff=Math.round((d-h)/86400000);
+ var dataTxt=somenteDataBR(s);
+ if(diff===0)return {ord:0,cls:'due',label:'Hoje - '+dataTxt};
+ if(diff===1)return {ord:1,cls:'next',label:'Amanhã - '+dataTxt};
+ return {ord:diff<0?2:diff+10,cls:'normal',label:dataTxt||s};
+}
+function carregarDados(){
+ var rows=document.querySelectorAll('#tblNotas tbody tr');
+ allData=[];
+ rows.forEach(function(tr,i){
+  var d=tr.dataset;
+  allData.push({
+   idx:i,equipe:d.equipe||'',nota:d.nota||'',tipo:d.tipo||'',venc:d.venc||'',
+   cidade:d.cidade||'',bairro:d.bairro||'',rua:d.rua||'',carga:d.carga||'',
+   medidoruso:d.medidoruso||'',de:d.de||'',para:d.para||'',md200a:d.md200a||'0',
+   cabocliente:d.cabocliente||'',cabocosern:d.cabocosern||'',disjuntor:d.disjuntor||'',medidoratual:d.medidoratual||''
+  });
+ });
+}
+function atualizarResumoVencDia(){
+ var cards=document.querySelectorAll('.teamCard');
+ cards.forEach(function(card){
+  var eq=card.dataset.equipe||'';
+  var qtd=allData.filter(function(x){
+   return x.equipe===eq && dateInfo(x.venc).ord===0;
+  }).length;
+  var box=card.querySelector('.statBox.venc');
+  if(box){box.innerHTML=qtd+'<span>Venc/dia</span>';}
+ });
+}
+function abrirEquipe(eq){
+ document.getElementById('viewResumo').style.display='none';
+ document.getElementById('viewDetalhe').style.display='block';
+ renderEquipe(eq);
+}
+function voltarResumo(){
+ document.getElementById('viewDetalhe').style.display='none';
+ document.getElementById('viewResumo').style.display='block';
+ atualizarResumoVencDia();
+}
+function renderEquipe(eq){
+ var cards=document.getElementById('cards');
+ var lista=allData.filter(function(x){return x.equipe===eq;});
+ lista.sort(function(a,b){return dateInfo(a.venc).ord-dateInfo(b.venc).ord;});
+ document.getElementById('equipeSelecionada').textContent=eq;
+ document.getElementById('qtdEquipe').textContent=lista.length+' notas';
+ var out='';
+ lista.forEach(function(it){
+  var dt=dateInfo(it.venc);
+  out+='<div class="card">';
+  out+='<div class="nota">'+(it.nota||'—')+'</div>';
+  out+='<div class="servico">'+(it.tipo||'')+'</div>';
+  out+='<div class="cidade"><b>'+it.cidade+'</b> • '+it.bairro+'</div>';
+  out+='<div class="rua">'+it.rua+'</div>';
+  out+='<div class="pillRow">';
+  out+='<div class="pill">'+(it.de||'')+' &gt; '+(it.para||'')+'</div>';
+  out+='<div class="pill">Carga: '+(it.carga||'—')+'</div>';
+  if(it.md200a==='1'){out+='<div class="pill md">MD 200A</div>';}
+  out+='</div>';
+  out+='<div class="medidor">MEDIDOR A SER UTILIZADO: '+(it.medidoruso||'—')+'</div>';
+  out+='<div class="dateStatus '+dt.cls+'">'+dt.label+'</div>';
+  out+='<div class="actions">';
+  out+='<button class="btn ghost" onclick="showModalByIndex('+it.idx+')">Detalhes</button>';
+  out+='<button class="btn ok" onclick="concluirCard(this)">Concluído</button>';
+  out+='</div>';
+  out+='</div>';
+ });
+ cards.innerHTML=out;
+}
+function concluirCard(btn){
+ var card=btn.closest('.card');
+ if(!card)return;
+ card.style.opacity='0.25';
+ setTimeout(function(){card.remove();},220);
+}
+function showModalByIndex(idx){
+ var it=allData[idx];
+ if(!it)return;
+ var modal=document.createElement('div');
+ modal.className='modal';
+ var content=document.createElement('div');
+ content.className='modal-content';
+ var html='<h3>Nota '+(it.nota||'')+'</h3>';
+ function add(label,value){if(value){html+='<p><b>'+label+': </b>'+value+'</p>';}}
+ add('Tipo de Serviço',it.tipo);
+ add('Data de Vencimento',it.venc);
+ add('Cidade',it.cidade);
+ add('Bairro',it.bairro);
+ add('Rua',it.rua);
+ add('Carga',it.carga);
+ add('MEDIDOR A SER UTILIZADO',it.medidoruso);
+ add('De',it.de);
+ add('Para',it.para);
+ add('Cabo Cliente',it.cabocliente);
+ add('Cabo Cosern',it.cabocosern);
+ add('Disjuntor',it.disjuntor);
+ add('Medidor atual',it.medidoratual);
+ if(it.md200a==='1'){add('MD200A','Sim');}
+ html+='<button class="modalClose">Fechar</button>';
+ content.innerHTML=html;
+ modal.appendChild(content);
+ document.body.appendChild(modal);
+ content.querySelector('.modalClose').onclick=function(){document.body.removeChild(modal);};
+ modal.onclick=function(e){if(e.target===modal){document.body.removeChild(modal);}};
+}
+document.addEventListener('DOMContentLoaded',function(){
+ carregarDados();
+ atualizarResumoVencDia();
+ setInterval(atualizarResumoVencDia,60000);
+ document.querySelectorAll('.teamCard').forEach(function(card){
+  card.addEventListener('click',function(){abrirEquipe(card.dataset.equipe);});
+ });
+});
+</script>
+</div>
+</body>
+</html>
