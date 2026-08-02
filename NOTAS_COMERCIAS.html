@@ -66,7 +66,7 @@ button,input,select{font:inherit;}
 <header class='appbar'>
 <div class='headerText'>
 <div class='title'>CARTEIRA DE NOTAS</div>
-<div class='updated'>Ultima atualizacao: 01/08/2026 20:03:18</div>
+<div class='updated'>Ultima atualizacao: 01/08/2026 21:22:01</div>
 </div>
 <a class='backPortal' href='index.html' aria-label='Voltar ao Portal' title='Voltar ao Portal'>
 <svg class='homeIcon' viewBox='0 0 24 24' aria-hidden='true'>
@@ -196,6 +196,15 @@ const mapaBaseCidade={
 'PARELHAS':['EQUADOR','SANTANA DO SERIDO','JARDIM DO SERIDO','OURO BRANCO','CARNAUBA DOS DANTAS','PARELHAS'],
 'SANTA CRUZ':['CAMPO REDONDO','LAJES PINTADA','CORONEL EZEQUIEL','JACANA','JAPI','SANTA CRUZ','SAO BENTO DO TRAIRI'],
 };
+function normalizarTexto(valor){
+return String(valor||'')
+.normalize('NFD')
+.replace(/[\u0300-\u036f]/g,'')
+.replace(/\u00A0/g,' ')
+.replace(/\s+/g,' ')
+.trim()
+.toUpperCase();
+}
 function somenteDataBR(s){if(!s)return '';s=String(s).trim();const m=s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(!m)return '';return String(m[1]).padStart(2,'0')+'/'+String(m[2]).padStart(2,'0')+'/'+m[3];}
 function parseDateFriendly(s){s=somenteDataBR(s);if(!s)return{cls:'',label:''};const p=s.split('/');if(p.length!==3)return{cls:'',label:s};const d=new Date(parseInt(p[2],10),parseInt(p[1],10)-1,parseInt(p[0],10));if(isNaN(d.getTime()))return{cls:'',label:s};const t=new Date();t.setHours(0,0,0,0);d.setHours(0,0,0,0);const diff=Math.round((d-t)/86400000);if(diff===0)return{cls:'due',label:'Hoje - '+s};if(diff===1)return{cls:'next',label:'Amanha - '+s};return{cls:'',label:s};}
 document.addEventListener('DOMContentLoaded',function(){
@@ -209,9 +218,45 @@ const empty=document.querySelector('#empty');
 const data=rows.map(function(tr){return Object.assign({},tr.dataset);});
 const bases=[...new Set(data.map(function(x){return x.base;}))].filter(function(x){return x;}).sort();
 bases.forEach(function(b){const o=document.createElement('option');o.value=b;o.textContent=b;fBase.appendChild(o);});
-function loadCities(){fCid.innerHTML="<option value=''>Todas as cidades</option>";const b=fBase.value;if(b&&mapaBaseCidade[b]){mapaBaseCidade[b].slice().sort().forEach(function(c){const o=document.createElement('option');o.value=c;o.textContent=c;fCid.appendChild(o);});}render();}
+function loadCities(){
+const cidadeSelecionada=fCid.value;
+fCid.innerHTML="<option value=''>Todas as cidades</option>";
+const baseSelecionada=fBase.value;
+const mapaCidades=new Map();
+data.forEach(function(item){
+if(baseSelecionada&&normalizarTexto(item.base)!==normalizarTexto(baseSelecionada))return;
+const cidade=String(item.cidade||'').trim();
+if(!cidade)return;
+const chave=normalizarTexto(cidade);
+if(!mapaCidades.has(chave)){mapaCidades.set(chave,cidade);}
+});
+const cidades=Array.from(mapaCidades.values());
+cidades.sort(function(a,b){return a.localeCompare(b,'pt-BR');});
+cidades.forEach(function(cidade){
+const opcao=document.createElement('option');
+opcao.value=cidade;
+opcao.textContent=cidade;
+fCid.appendChild(opcao);
+});
+const cidadeAindaExiste=cidades.some(function(cidade){
+return normalizarTexto(cidade)===normalizarTexto(cidadeSelecionada);
+});
+if(cidadeAindaExiste){fCid.value=cidadeSelecionada;}
+render();
+}
 function render(){cards.innerHTML='';const txt=(q.value||'').trim().toLowerCase();const selB=fBase.value;const selC=fCid.value;let shown=0;
-data.forEach(function(it){if(selB&&it.base!==selB)return;if(selC&&it.cidade!==selC)return;const hay=((it.nota||'')+' '+(it.tipo||'')+' '+(it.cidade||'')+' '+(it.bairro||'')+' '+(it.rua||'')).toLowerCase();if(txt&&hay.indexOf(txt)===-1)return;const d=parseDateFriendly(it.venc);
+data.forEach(function(it){
+if(selB&&normalizarTexto(it.base)!==normalizarTexto(selB))return;
+if(selC&&normalizarTexto(it.cidade)!==normalizarTexto(selC))return;
+const hay=normalizarTexto(
+(it.nota||'')+' '+
+(it.tipo||'')+' '+
+(it.cidade||'')+' '+
+(it.bairro||'')+' '+
+(it.rua||'')
+);
+if(txt&&hay.indexOf(normalizarTexto(txt))===-1)return;
+const d=parseDateFriendly(it.venc);
 const card=document.createElement('article');card.className='card';
 const top=document.createElement('div');top.className='cardTop';const nota=document.createElement('div');nota.className='nota';nota.textContent=it.nota||'--';const tipo=document.createElement('div');tipo.className='tipo';tipo.textContent=it.tipo||'';top.appendChild(nota);top.appendChild(tipo);
 const addr=document.createElement('div');addr.className='addr';const linhaCidade=document.createElement('div');const cidade=document.createElement('strong');cidade.textContent=it.cidade||'';linhaCidade.appendChild(cidade);linhaCidade.appendChild(document.createTextNode(' - '+(it.bairro||'')));const rua=document.createElement('div');rua.className='ruaCard';rua.textContent=it.rua||'';addr.appendChild(linhaCidade);addr.appendChild(rua);
