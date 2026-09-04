@@ -5,6 +5,20 @@
 <meta name='viewport' content='width=device-width,initial-scale=1'>
 <meta name='description' content='Carteira de Notas Comerciais'>
 <title>CARTEIRA DE NOTAS</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAgFRfZanBfDCK79eWEMWONEg-oppkB2as",
+  authDomain: "programacao-stc.firebaseapp.com",
+  projectId: "programacao-stc",
+  storageBucket: "programacao-stc.firebasestorage.app",
+  messagingSenderId: "557076940494",
+  appId: "1:557076940494:web:366e4432084a50f8aef29f"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+</script>
 <style>
 :root{--verde:#00A443;--verde-escuro:#007B32;--verde-claro:#E8F8EF;--azul:#0DA9FE;--azul-claro:#E7F6FF;--laranja:#FF9C1A;--branco:#FFFFFF;--fundo:#F3F7F5;--texto:#17372C;--texto-secundario:#65746F;--borda:#DCE7E2;--vermelho:#E9473F;--amarelo:#F2C84B;}
 *{box-sizing:border-box;}
@@ -308,6 +322,20 @@ const categoryContent=document.querySelector('#categoryContent');
 const categoryButtons=[...document.querySelectorAll('.categoryButton')];
 const data=rows.map(function(tr){return Object.assign({},tr.dataset);});
 let categoriaSelecionada='';
+let statusMap={};
+function getViatura(){
+let v=localStorage.getItem('viatura');
+if(!v){
+v=prompt('Digite o nome ou numero da viatura:');
+if(v)localStorage.setItem('viatura',v.trim());
+}
+return v||'nao informado';
+}
+db.collection('notas').onSnapshot(function(snapshot){
+statusMap={};
+snapshot.forEach(function(doc){statusMap[doc.id]=doc.data();});
+render();
+},function(err){console.error('Erro Firestore:',err);});
 function loadBases(){
 fBase.innerHTML="<option value=''>Todas as bases</option>";
 const mapaBases=new Map();
@@ -353,6 +381,7 @@ data.forEach(function(it){
 if(normalizarTexto(it.categoria)!==normalizarTexto(categoriaSelecionada))return;
 if(selB&&normalizarTexto(it.base)!==normalizarTexto(selB))return;
 if(selC&&normalizarTexto(it.cidade)!==normalizarTexto(selC))return;
+if(statusMap[it.nota]&&statusMap[it.nota].status==='concluido')return;
 const hay=normalizarTexto((it.nota||'')+' '+(it.tipo||'')+' '+(it.cidade||'')+' '+(it.bairro||'')+' '+(it.rua||''));
 if(txt&&hay.indexOf(normalizarTexto(txt))===-1)return;
 const d=parseDateFriendly(it.venc);
@@ -375,7 +404,17 @@ const foot=document.createElement('div');foot.className='cardFooter';
 const dt=document.createElement('div');dt.className='dateStatus '+d.cls;dt.textContent=d.label||it.venc||'Sem data';
 const actions=document.createElement('div');actions.className='actions';
 const b1=document.createElement('button');b1.type='button';b1.className='btn ghost';b1.textContent='Detalhes';b1.onclick=function(){showModal(it);};
-const b2=document.createElement('button');b2.type='button';b2.className='btn primary';b2.textContent='Concluido';b2.onclick=function(){card.style.opacity='0.4';setTimeout(function(){card.remove();updateCount();},180);};
+const b2=document.createElement('button');b2.type='button';b2.className='btn primary';b2.textContent='Concluido';b2.onclick=function(){
+const viatura=getViatura();
+b2.disabled=true;b2.textContent='Salvando...';
+db.collection('notas').doc(it.nota).set({status:'concluido',concluidoPor:viatura,concluidoEm:firebase.firestore.FieldValue.serverTimestamp(),nota:it.nota,tipo:it.tipo||'',cidade:it.cidade||''},{merge:true}).then(function(){
+card.style.opacity='0.4';setTimeout(function(){card.remove();updateCount();},180);
+}).catch(function(err){
+console.error(err);
+alert('Erro ao salvar. Verifique a internet e tente novamente.');
+b2.disabled=false;b2.textContent='Concluido';
+});
+};
 actions.appendChild(b1);actions.appendChild(b2);
 foot.appendChild(dt);foot.appendChild(actions);
 card.appendChild(top);card.appendChild(addr);card.appendChild(fields);card.appendChild(foot);
