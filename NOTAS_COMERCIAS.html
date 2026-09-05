@@ -5,19 +5,19 @@
 <meta name='viewport' content='width=device-width,initial-scale=1'>
 <meta name='description' content='Carteira de Notas Comerciais'>
 <title>CARTEIRA DE NOTAS</title>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js'></script>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyAgFRfZanBfDCK79eWEMWONEg-oppkB2as",
-  authDomain: "programacao-stc.firebaseapp.com",
-  projectId: "programacao-stc",
-  storageBucket: "programacao-stc.firebasestorage.app",
-  messagingSenderId: "557076940494",
-  appId: "1:557076940494:web:366e4432084a50f8aef29f"
+const firebaseConfig={
+apiKey:'AIzaSyAgFRfZanBfDCK79eWEMWONEg-oppkB2as',
+authDomain:'programacao-stc.firebaseapp.com',
+projectId:'programacao-stc',
+storageBucket:'programacao-stc.firebasestorage.app',
+messagingSenderId:'557076940494',
+appId:'1:557076940494:web:366e4432084a50f8aef29f'
 };
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+const db=firebase.firestore();
 </script>
 <style>
 :root{--verde:#00A443;--verde-escuro:#007B32;--verde-claro:#E8F8EF;--azul:#0DA9FE;--azul-claro:#E7F6FF;--laranja:#FF9C1A;--branco:#FFFFFF;--fundo:#F3F7F5;--texto:#17372C;--texto-secundario:#65746F;--borda:#DCE7E2;--vermelho:#E9473F;--amarelo:#F2C84B;}
@@ -36,10 +36,9 @@ button,input,select{font:inherit;}
 .homeIcon{width:29px;height:29px;display:block;fill:#fff;}
 .content{padding:14px 16px 24px;}
 .categorySelector{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.categoryButton{min-height:48px;padding:10px 8px;background:var(--verde);color:#fff;border:2px solid var(--verde);border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;transition:transform .18s ease,filter .18s ease,background .18s ease;}
+.categoryButton{min-height:48px;padding:10px 8px;background:var(--verde);color:#fff;border:2px solid var(--verde);border-radius:12px;font-size:15px;font-weight:900;cursor:pointer;transition:.18s;}
 .categoryButton:hover{filter:brightness(.96);transform:translateY(-1px);}
 .categoryButton.active{background:var(--verde-escuro);border-color:var(--verde-escuro);box-shadow:0 0 0 3px rgba(0,164,67,.16);}
-.categoryButton:focus-visible{outline:3px solid rgba(13,169,254,.40);outline-offset:2px;}
 .categoryContent{display:none;}
 .categoryContent.visible{display:block;}
 .controls{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:15px;}
@@ -51,7 +50,7 @@ button,input,select{font:inherit;}
 .resultsTitle{font-size:16px;font-weight:900;}
 #contadorTotal{display:inline-flex;align-items:center;justify-content:center;padding:7px 11px;background:var(--verde-claro);color:var(--verde-escuro);border-radius:50px;font-size:12px;font-weight:900;white-space:nowrap;}
 .cardsWrap{display:grid;grid-template-columns:1fr;gap:15px;margin-top:12px;}
-.card{background:#fff;border:1px solid var(--borda);border-top:4px solid var(--verde);border-radius:18px;padding:17px;box-shadow:0 7px 20px rgba(20,66,49,.09);display:flex;flex-direction:column;gap:10px;transition:transform .2s ease,box-shadow .2s ease;}
+.card{background:#fff;border:1px solid var(--borda);border-top:4px solid var(--verde);border-radius:18px;padding:17px;box-shadow:0 7px 20px rgba(20,66,49,.09);display:flex;flex-direction:column;gap:10px;transition:.2s;}
 .card:hover{transform:translateY(-2px);box-shadow:0 12px 27px rgba(20,66,49,.14);}
 .cardTop{display:flex;flex-direction:column;gap:3px;}
 .nota{font-size:17px;font-weight:900;color:var(--texto);}
@@ -66,11 +65,12 @@ button,input,select{font:inherit;}
 .dateStatus.next{background:var(--amarelo);color:#000;}
 .cardFooter{display:flex;flex-direction:column;gap:9px;}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.btn{min-height:41px;padding:10px 8px;border:0;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;transition:transform .18s ease,filter .18s ease;}
+.btn{min-height:41px;padding:10px 8px;border:0;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer;transition:.18s;}
 .btn:hover{filter:brightness(.96);transform:translateY(-1px);}
 .btn.ghost{background:var(--verde-claro);color:var(--verde-escuro);}
 .btn.primary{background:var(--verde);color:#fff;}
 .empty{display:none;padding:25px 15px;color:var(--texto-secundario);text-align:center;font-size:14px;}
+.loading{padding:30px 15px;text-align:center;color:var(--texto-secundario);font-weight:700;}
 .modal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(0,0,0,.55);}
 .modal-content{width:100%;max-width:470px;max-height:82vh;overflow:auto;padding:20px;background:#fff;border-radius:18px;box-shadow:0 18px 45px rgba(0,0,0,.30);}
 .modal-content h3{margin:0 0 14px;color:var(--verde-escuro);font-size:20px;}
@@ -79,7 +79,6 @@ button,input,select{font:inherit;}
 @media(max-width:430px){.appbar{min-height:96px;padding:16px 86px 16px 15px;}.title{font-size:21px;}.updated{font-size:9px;}.backPortal{right:8px;width:60px;font-size:11px;}.content{padding-left:11px;padding-right:11px;}.card{padding:15px;}}
 @media(max-width:350px){.appbar{padding-right:75px;}.title{font-size:19px;}.backPortal{right:5px;width:53px;font-size:10px;}.categorySelector{gap:7px;}.categoryButton{font-size:12px;padding:8px 5px;}.actions{gap:6px;}.btn{font-size:12px;}}
 @media(min-width:700px){.app{margin:12px auto;border-radius:22px;min-height:calc(100vh - 24px);}}
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;}}
 </style>
 </head>
 <body>
@@ -87,301 +86,81 @@ button,input,select{font:inherit;}
 <header class='appbar'>
 <div class='headerText'>
 <div class='title'>CARTEIRA DE NOTAS</div>
-<div class='updated'>Ultima atualizacao: 04/09/2026 17:42:40</div>
+<div class='updated'>Ultima atualizacao: 04/09/2026 23:16:28</div>
 </div>
-<a class='backPortal' href='index.html' aria-label='Voltar ao Portal' title='Voltar ao Portal'>
-<svg class='homeIcon' viewBox='0 0 24 24' aria-hidden='true'>
-<path d='M12 2.5L2.5 10.4V21h6.2v-6.3h6.6V21h6.2V10.4z'></path>
-</svg>
+<a class='backPortal' href='index.html' aria-label='Voltar ao Portal'>
+<svg class='homeIcon' viewBox='0 0 24 24'><path d='M12 2.5L2.5 10.4V21h6.2v-6.3h6.6V21h6.2V10.4z'></path></svg>
 <span>Voltar</span>
 </a>
 </header>
 <main class='content'>
-<section class='categorySelector' aria-label='Tipo de notas'>
-<button id='btnReguladas' type='button' class='categoryButton' data-categoria='REGULADAS'>REGULADAS</button>
-<button id='btnTroca de medidor' type='button' class='categoryButton' data-categoria='TROCA DE MEDIDOR'>TROCA DE MEDIDOR</button>
+<section class='categorySelector'>
+<button type='button' class='categoryButton' data-categoria='REGULADAS'>REGULADAS</button>
+<button type='button' class='categoryButton' data-categoria='TROCA DE MEDIDOR'>TROCA DE MEDIDOR</button>
 </section>
 <div id='categoryContent' class='categoryContent'>
 <section class='controls'>
-<div class='controlGroup'>
-<label class='controlLabel' for='filtroBase'>Base</label>
-<select id='filtroBase'><option value=''>Todas as bases</option></select>
-</div>
-<div class='controlGroup'>
-<label class='controlLabel' for='filtroCidade'>Cidade</label>
-<select id='filtroCidade'><option value=''>Todas as cidades</option></select>
-</div>
-<div class='controlGroup'>
-<label class='controlLabel' for='qSearch'>Pesquisa</label>
-<input id='qSearch' type='search' placeholder='Nota, servico, cidade, bairro ou rua'>
-</div>
+<div class='controlGroup'><label class='controlLabel' for='filtroBase'>Base</label>
+<select id='filtroBase'><option value=''>Todas as bases</option></select></div>
+<div class='controlGroup'><label class='controlLabel' for='filtroCidade'>Cidade</label>
+<select id='filtroCidade'><option value=''>Todas as cidades</option></select></div>
+<div class='controlGroup'><label class='controlLabel' for='qSearch'>Pesquisa</label>
+<input id='qSearch' type='search' placeholder='Nota, servico, cidade, bairro ou rua'></div>
 <div class='resultsBar'><div class='resultsTitle'>Notas disponiveis</div><div id='contadorTotal'>Total: 0</div></div>
 </section>
-<table id='tblNotas' style='display:none'><tbody>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='ACARI' data-nota='4601596223' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='ACARI' data-bairro='PETROPOLIS                           ' data-rua='RUA VITORIA RIBEIRO DA SILVA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615710' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='ADJUNTO DIAS                         ' data-rua='RUA PRESIDENTE CASTELO BRANCO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615696' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='BOA PASSAGEM                         ' data-rua='RUA JULIO RODRIGUES' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615692' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='BOA PASSAGEM                         ' data-rua='RUA MARISTELA DINIZ' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615697' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='CANUTOS E FILHOS                     ' data-rua='RUA ANA EDITE DE MEDEIROS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615709' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='CANUTOS E FILHOS                     ' data-rua='RUA FRANCISCO GODOFREDO FERNANDES' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615711' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='CANUTOS E FILHOS                     ' data-rua='RUA FRANCISCO GODOFREDO FERNANDES' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615669' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='RUA GENERINA VALE' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615668' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='RUA RENATO DANTAS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615690' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='NOVA CAICO                           ' data-rua='RUA FRANCISCO ROSADO DOS SANTOS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615704' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='NOVA CAICO                           ' data-rua='RUA JUAREZ GARCIA DE MEDEIROS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615706' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='NOVA DESCOBERTA                      ' data-rua='AV ANTONIO VIEIRA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615671' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='NOVA DESCOBERTA                      ' data-rua='RUA FRANCISCO DANTAS DE MEDEIROS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601596562' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='18/08/2026' data-cidade='CAICO' data-bairro='SERROTE BRANCO                       ' data-rua='RUA MARIA VERA LUCIA DE ARAUJO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615673' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='SOLEDADE                             ' data-rua='RUA ANTONIO QUIRINO DOS SANTOS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615672' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='WALFREDO GURGEL                      ' data-rua='RUA LUIZ ALVES DE FRANCA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601615670' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CAICO' data-bairro='ZE LIMA                              ' data-rua='AV INEZ FERNANDES SANTOS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CAICO' data-poli='CAICO' data-nota='4601589541' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='29/07/2026' data-cidade='CAICO' data-bairro='ZONA RURAL                           ' data-rua='FZ SALGADINHO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615675' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='CENTRO                               ' data-rua='RUA ANTONIO JUSTINO SOBRINHO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615674' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='CENTRO                               ' data-rua='RUA CANDIDO MENDES' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615694' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='DOUTOR SILVIO BEZERRA DE MELO        ' data-rua='RUA JOSE ANTAO DE ARAUJO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615705' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='DOUTOR SILVIO BEZERRA DE MELO        ' data-rua='RUA PROFESSOR MANOEL TARGINO DE AGRIPINO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615708' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='GOV RADIR PEREIRA DE ARAUJO          ' data-rua='RUA MANOEL MARQUES PEREIRA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615677' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='PAIZINHO MARIA                       ' data-rua='AV TREZE DE MAIO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615679' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='PARQUE DOURADO                       ' data-rua='RUA CARIRI' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615695' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='PARQUE DOURADO                       ' data-rua='RUA JOAQUIM IRAPUAN GOMES' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615678' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='PARQUE DOURADO                       ' data-rua='RUA MARIA AUGUSTA PEREIRA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601615676' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='PROFESSSOR GILBERTO DA CUNHA PINHEIRO' data-rua='RUA PRESIDENTE CASTELO BRANCO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='CURRAIS NOVOS' data-poli='FLORANIA' data-nota='4601604029' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='08/09/2026' data-cidade='FLORANIA' data-bairro='CENTRO                               ' data-rua='RUA MANOEL EMIDIO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4601596234' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JAPI' data-bairro='CENTRO                               ' data-rua='RUA JOAO NICOLAU DOS SANTOS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4601596239' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JAPI' data-bairro='CENTRO                               ' data-rua='RUA LUIZ GOMES' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4601596267' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JAPI' data-bairro='CENTRO                               ' data-rua='RUA MAE BIANA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4601596268' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JAPI' data-bairro='CENTRO                               ' data-rua='RUA MANOEL NICOLAU DA SILVA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4601589528' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='29/07/2026' data-cidade='JAPI' data-bairro='PEDRA PRETA                          ' data-rua='PO PEDRA PRETA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4601589506' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='29/07/2026' data-cidade='JAPI' data-bairro='ZONA RURAL                           ' data-rua='SI TUBIBA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596255' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='CENTRO                               ' data-rua='RUA CORONEL JOAO DAMASCENO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596290' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='CENTRO                               ' data-rua='RUA MANOEL PEREIRA DA CRUZ' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596256' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='CENTRO                               ' data-rua='RUA MANOEL PEREIRA DE MEDEIROS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596257' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='CENTRO                               ' data-rua='RUA MANOEL PEREIRA DE MEDEIROS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601586106' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='22/07/2026' data-cidade='JUCURUTU' data-bairro='CENTRO                               ' data-rua='RUA VICENTE DUTRA DE SOUZA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596254' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='DNOCS                                ' data-rua='RUA DAS ORQUIDEAS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596253' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='JOAO DE BARRO                        ' data-rua='RUA POETA RAFAEL ARCANJO DA COSTA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596280' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='NOVO RUMO                            ' data-rua='RUA CELSO FERNANDES' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596252' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='SANTA ISABEL                         ' data-rua='CJ JOAO DE BARROS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596269' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='SANTA ISABEL                         ' data-rua='RUA DA LIBERDADE' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596250' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='SANTA ISABEL                         ' data-rua='RUA DOUTOR LUIZ TERCEIRO JACOME' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596249' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='SANTA ISABEL                         ' data-rua='RUA DOUTOR LUIZ TERCEIRO JACOME' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596248' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='SANTA ISABEL                         ' data-rua='RUA DOUTOR LUIZ TERCEIRO JACOME' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596246' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='SANTA ISABEL                         ' data-rua='RUA JOSE DE ARIMATEIA LULA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596247' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='SANTA ISABEL                         ' data-rua='RUA JOSE DE ARIMATEIA LULA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='EPS' data-poli='JUCURUTU' data-nota='4601596251' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/08/2026' data-cidade='JUCURUTU' data-bairro='SANTA ISABEL                         ' data-rua='RUA NEWMAN QUEIROZ' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615712' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='BOQUEIRAO                            ' data-rua='RUA DURVAL BURITI' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615703' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='BOQUEIRAO                            ' data-rua='RUA JOSE FLORIPE GINANE' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615680' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='CENTRO                               ' data-rua='PC ARNALDO BEZERRA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615681' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='CENTRO                               ' data-rua='RUA AGEU DE CASTRO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615699' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='CENTRO                               ' data-rua='RUA PEDRO CANDIDO DE MACEDO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615687' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='COHAB                                ' data-rua='RUA ANA MACEDO BEZERRA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615691' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='CRUZ DO MONTE                        ' data-rua='RUA CICERO TOMAZ DE AZEVEDO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615682' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='CRUZ DO MONTE                        ' data-rua='RUA CIRILO SANTOS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615683' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='CRUZ DO MONTE                        ' data-rua='RUA IVONETE COSTA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615689' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='CRUZ DO MONTE                        ' data-rua='RUA JOAO CAETANO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615693' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='CRUZ DO MONTE                        ' data-rua='TV ALCIDES BRAS DE ARAUJO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615700' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='IVAN BEZERRA                         ' data-rua='RUA PEDRO CANDIDO DE MACEDO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615702' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='IVAN BEZERRA                         ' data-rua='RUA PEDRO CANDIDO DE MACEDO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615701' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='JOSE CLOVIS DE MEDEIROS              ' data-rua='RUA CAMILO JOSE DA SILVA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615698' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='JOSE CLOVIS DE MEDEIROS              ' data-rua='RUA JOSE ANGELO DANTAS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615686' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='MARIA TERCEIRA                       ' data-rua='RUA CESAR SANTIAGO DE LIMA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615707' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='MARIA TERCEIRA                       ' data-rua='RUA ESPEDITO BEZERRA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615685' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='MARIA TERCEIRA                       ' data-rua='RUA LUCIO DANTAS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615684' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='MARIA TERCEIRA                       ' data-rua='TV LUCIO DANTAS' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='TROCA DE MEDIDOR' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601615688' data-tipo='Subst. Equipamento Med. BT – Enlace PEC' data-venc='28/09/2026' data-cidade='PARELHAS' data-bairro='SAO SEBASTIAO                        ' data-rua='RUA ROBERTO PEREIRA DA SILVA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4502080213' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='JAPI' data-bairro='PEDRA PRETA                          ' data-rua='PO PEDRA PRETA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4502081218' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='JAPI' data-bairro='ZONA RURAL                           ' data-rua='SI IPUEIRAS' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4502083138' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='JAPI' data-bairro='ZONA RURAL                           ' data-rua='SI IPUEIRAS' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502084385' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='SANTA CRUZ' data-bairro='ALEGRE                               ' data-rua='RUA SAO JORGE' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4601609543' data-tipo='Mudar Local de Medidor' data-venc='08/09/2026' data-cidade='SANTA CRUZ' data-bairro='CENTRO                               ' data-rua='RUA ALUIZIO BEZERRA' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502083706' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='SANTA CRUZ' data-bairro='CENTRO                               ' data-rua='RUA PROFETA SERAFIM NUNES' data-carga='34' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502083137' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='SANTA CRUZ' data-bairro='CONEGO MONTE                         ' data-rua='AV MONSENHOR RAIMUNDO GOMES BARBOSA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502079232' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='SANTA CRUZ' data-bairro='MARACUJA                             ' data-rua='RUA JOAO BEZERRA DE FARIAS' data-carga='19' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502069138' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='SANTA CRUZ' data-bairro='PARAISO                              ' data-rua='RUA SANTA RITA' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='JACANA' data-nota='4601611168' data-tipo='Modificação BT - Conexão GD Micro' data-venc='09/09/2026' data-cidade='CORONEL EZEQUIEL' data-bairro='CENTRO                               ' data-rua='RUA SENADOR GEORGINO AVELINO' data-carga='8' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='JACANA' data-nota='4502081779' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CORONEL EZEQUIEL' data-bairro='LAJES                                ' data-rua='PO LAJES' data-carga='4,9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='JACANA' data-nota='4502083744' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='JACANA' data-bairro='NOVO HORIZONTE                       ' data-rua='RUA FRANCISCO PEREIRA DA SILVA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4502082450' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='JAPI' data-bairro='BARRA DO JAPI                        ' data-rua='SI SALGADO' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='TRAIRI' data-nota='4502079258' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='JAPI' data-bairro='CENTRO                               ' data-rua='RUA MANOEL MEDEIROS FILHO' data-carga='8,65' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502084454' data-tipo='Reativação BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='CENTRO                               ' data-rua='RUA AUGUSTO SEVERO' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502079270' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='CENTRO                               ' data-rua='TV MIGUEL NUNES' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502081309' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='CONEGO MONTE                         ' data-rua='RUA NOSSA SENHORA DOS IMPOSSIVEIS' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502082481' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='CONEGO MONTE                         ' data-rua='RUA SAO JOAO DA CRUZ' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502081797' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='MARACUJA                             ' data-rua='RUA ANTONIO VICENTE DE LIMA' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4601611181' data-tipo='Modificação BT - Conexão GD Micro' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='MARACUJA                             ' data-rua='RUA MAJOR JOAO PINHEIRO B CAVALCANTE' data-carga='22' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4601611178' data-tipo='Modificação BT - Conexão GD Micro' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='MIRANTE DO ALTO                      ' data-rua='RUA HOSANA FERREIRA DA ROCHA' data-carga='11,31' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502081776' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='PARAISO                              ' data-rua='AV PAULO AFONSO' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4501967469' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='PARAISO                              ' data-rua='RUA JOSE AILTON GOMES DA PENHA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502084481' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='PARAISO                              ' data-rua='RUA JOSE RODRIGUES BORGES' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502078654' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='PARAISO                              ' data-rua='RUA LUIZ GERALDO NETO' data-carga='9' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502080258' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='ZONA RURAL                           ' data-rua='FZ MASSAPE' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502081255' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='ZONA RURAL                           ' data-rua='SI AROEIRA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='SANTA CRUZ' data-poli='SANTA CRUZ' data-nota='4502080662' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTA CRUZ' data-bairro='ZONA RURAL                           ' data-rua='SI AROEIRA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='JARDIM DO SERIDO' data-nota='4601612050' data-tipo='Mudar Local de Medidor' data-venc='08/09/2026' data-cidade='JARDIM DO SERIDO' data-bairro='BELA VISTA                           ' data-rua='RUA NELSON CANDIDO DE MACEDO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502078635' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='PARELHAS' data-bairro='ZONA RURAL                           ' data-rua='SI VARZEA DOS BARROS' data-carga='16' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='JARDIM DO SERIDO' data-nota='4601609131' data-tipo='Alter Padrão Religa' data-venc='09/09/2026' data-cidade='JARDIM DO SERIDO' data-bairro='CAIXA DAGUA                          ' data-rua='RUA FLORENTINO CUNHA' data-carga='' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='JARDIM DO SERIDO' data-nota='4601607514' data-tipo='Alteração Contratual' data-venc='09/09/2026' data-cidade='JARDIM DO SERIDO' data-bairro='CAIXA DAGUA                          ' data-rua='RUA FLORENTINO CUNHA' data-carga='44,47' data-de='TRIF' data-para='TRIF' data-cabocliente='16XLPE ou 25PVC' data-cabocosern='35mm AL' data-disjuntor='80(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='JARDIM DO SERIDO' data-nota='4601597928' data-tipo='Mod BT Aumento Potência GD Micro' data-venc='09/09/2026' data-cidade='OURO BRANCO' data-bairro='CENTRO                               ' data-rua='RUA VALENTIM LOPES' data-carga='55' data-de='TRIF' data-para='TRIF' data-cabocliente='25XLPE ou 35PVC' data-cabocosern='35mm AL' data-disjuntor='100(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502080286' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='PARELHAS' data-bairro='JOSE CLOVIS DE MEDEIROS              ' data-rua='RUA ZACARIAS AQUINO RIBEIRO' data-carga='5' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502080661' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='PARELHAS' data-bairro='MARIA TERCEIRA                       ' data-rua='RUA HELENO DANTAS' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502078643' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='PARELHAS' data-bairro='MARIA TERCEIRA                       ' data-rua='RUA HELENO DANTAS' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502084492' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='PARELHAS' data-bairro='ZONA RURAL                           ' data-rua='SI PINGAL' data-carga='20' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='EQUADOR' data-nota='4502079269' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='SANTANA DO SERIDO' data-bairro='ZONA RURAL                           ' data-rua='SI SACO DA CRUZ' data-carga='25' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601586991' data-tipo='Alteração Contratual' data-venc='10/09/2026' data-cidade='PARELHAS' data-bairro='CENTRO                               ' data-rua='RUA SAO SEBASTIAO' data-carga='64,37' data-de='TRIF' data-para='TRIF' data-cabocliente='25XLPE ou 35PVC' data-cabocosern='35mm AL' data-disjuntor='100(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601612544' data-tipo='Modificação BT - Conexão GD Micro' data-venc='10/09/2026' data-cidade='PARELHAS' data-bairro='COHAB                                ' data-rua='RUA IRENE BEZERRA DUARTE' data-carga='30' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='16mm AL' data-disjuntor='50(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502079335' data-tipo='Ligação Nova BT MUC' data-venc='10/09/2026' data-cidade='PARELHAS' data-bairro='CRUZ DO MONTE                        ' data-rua='RUA JOAO ERNESTO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502079336' data-tipo='Ligação Nova BT' data-venc='10/09/2026' data-cidade='PARELHAS' data-bairro='IPE                                  ' data-rua='RUA CAICO' data-carga='5' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502084519' data-tipo='Reativação BT' data-venc='10/09/2026' data-cidade='PARELHAS' data-bairro='MARIA TERCEIRA                       ' data-rua='RUA ALONSO BEZERRA DE ALBUQUERQUE' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='CARNAUBA DOS DANTAS' data-nota='4601612124' data-tipo='Mudar Local de Medidor' data-venc='11/09/2026' data-cidade='CARNAUBA DOS DANTAS' data-bairro='CENTRO                               ' data-rua='RUA JUVENAL LAMARTINE' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='CARNAUBA DOS DANTAS' data-nota='4502083835' data-tipo='Ligação Nova BT' data-venc='11/09/2026' data-cidade='CARNAUBA DOS DANTAS' data-bairro='ERMO                                 ' data-rua='PO ERMO' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='CARNAUBA DOS DANTAS' data-nota='4502045362' data-tipo='Ligação Nova BT' data-venc='11/09/2026' data-cidade='CARNAUBA DOS DANTAS' data-bairro='MONTE ALEGRE                         ' data-rua='SI MONTE ALEGRE' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='EQUADOR' data-nota='4502085062' data-tipo='Ligação Nova BT' data-venc='11/09/2026' data-cidade='EQUADOR' data-bairro='CENTRO                               ' data-rua='RUA SEVERINO MARCELINO DE OLIVERA' data-carga='11,15' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='EQUADOR' data-nota='4502078717' data-tipo='Ligação Nova BT' data-venc='11/09/2026' data-cidade='EQUADOR' data-bairro='JOSE MARCELINO DE OLIVEIRA           ' data-rua='RUA FRANCISCO GUEDES DE SOUZA' data-carga='7' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='EQUADOR' data-nota='4502079753' data-tipo='Ligação Nova BT' data-venc='11/09/2026' data-cidade='EQUADOR' data-bairro='JOSE MARCELINO DE OLIVEIRA           ' data-rua='RUA NEUZA MARCELINO DE OLIVEIRA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='JARDIM DO SERIDO' data-nota='4601611539' data-tipo='Mudar Local de Medidor' data-venc='11/09/2026' data-cidade='JARDIM DO SERIDO' data-bairro='SAO JOAO                             ' data-rua='RUA PREFEITO JOAQUIM ALVES' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601609139' data-tipo='Modificação BT - Conexão GD Micro' data-venc='11/09/2026' data-cidade='PARELHAS' data-bairro='CENTRO                               ' data-rua='AV DOUTOR MAURO MEDEIROS' data-carga='8,21' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502083224' data-tipo='Ligação Nova BT' data-venc='11/09/2026' data-cidade='PARELHAS' data-bairro='CENTRO                               ' data-rua='RUA COSME LUIZ' data-carga='17' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601613715' data-tipo='Alteração Contratual' data-venc='11/09/2026' data-cidade='PARELHAS' data-bairro='DINARTE MARIZ                        ' data-rua='RUA PADRE BENTO' data-carga='2,84' data-de='MONO' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601609607' data-tipo='Mudar Local de Medidor' data-venc='11/09/2026' data-cidade='PARELHAS' data-bairro='IPE                                  ' data-rua='RUA ACARI' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502083840' data-tipo='Ligação Nova BT' data-venc='11/09/2026' data-cidade='PARELHAS' data-bairro='IPE                                  ' data-rua='RUA JARDIM DO SERIDO' data-carga='5' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4601612141' data-tipo='Modificação BT - Conexão GD Micro' data-venc='11/09/2026' data-cidade='PARELHAS' data-bairro='SANTO ANTONIO DA COBRA               ' data-rua='PO SANTO ANTONIO' data-carga='6' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='PARELHAS' data-poli='PARELHAS' data-nota='4502079744' data-tipo='Ligação Nova BT' data-venc='11/09/2026' data-cidade='PARELHAS' data-bairro='ZONA RURAL                           ' data-rua='SI COBRA DE BAIXO' data-carga='19' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601612054' data-tipo='Modificação BT - Conexão GD Micro' data-venc='08/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='ANTONIO RAFAEL                       ' data-rua='AV DOUTOR SILVIO BEZERRA DE MELO' data-carga='32' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='16mm AL' data-disjuntor='50(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601609088' data-tipo='Modificação BT - Conexão GD Micro' data-venc='08/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='DOUTOR SILVIO BEZERRA DE MELO        ' data-rua='RUA FRANCISCA DE MEDEIROS GALVAO' data-carga='18,15' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601612072' data-tipo='Mudar Local de Medidor' data-venc='08/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='DOUTOR SILVIO BEZERRA DE MELO        ' data-rua='TV MANOEL TARGINO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601612478' data-tipo='Modificação BT - Conexão GD Micro' data-venc='08/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='JK                                   ' data-rua='RUA PROFESSORA MARIA DAS GRACAS MEDEIROS' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502083681' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='PAIZINHO MARIA                       ' data-rua='AV TREZE DE MAIO' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502084388' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='RADIR PEREIRA                        ' data-rua='RUA RADIALISTA FELIX SANTOS' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502079253' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='SACO DOS VEADOS                      ' data-rua='PO SACO DOS VEADOS' data-carga='12' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502081226' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='ZONA RURAL                           ' data-rua='SI SUSSUARANA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502082437' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='ALTO DE SANTA RITA                   ' data-rua='RUA SUETONIA BATISTA' data-carga='8,65' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502083740' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='ALTO DO SERIDO                       ' data-rua='AV VEREADOR PROFESSOR RADY' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502082462' data-tipo='Reativação BT' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='CORONEL MANOEL SALUSTINO             ' data-rua='RUA DA TETE SALUSTINO' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601609975' data-tipo='Modificação BT - Conexão GD Micro' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='DOUTOR SILVIO BEZERRA DE MELO        ' data-rua='RUA ANTONIO DE DEUS BARBOSA' data-carga='8' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502081768' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='DOUTOR SILVIO BEZERRA DE MELO        ' data-rua='RUA JOEL GALVAO' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601609563' data-tipo='Alter Padrão Desliga' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='DOUTOR SILVIO BEZERRA DE MELO        ' data-rua='RUA PROFESSOR MANOEL TARGINO DE AGRIPINO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601609564' data-tipo='Alter Padrão Religa' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='DOUTOR SILVIO BEZERRA DE MELO        ' data-rua='RUA PROFESSOR MANOEL TARGINO DE AGRIPINO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502076138' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='PAIZINHO MARIA                       ' data-rua='RUA BENEDITO GONCALVES' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4502081264' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='PAIZINHO MARIA                       ' data-rua='RUA KERGINALDO FERREIRA DA SILVA' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='CURRAIS NOVOS' data-nota='4601570384' data-tipo='Alteração Contratual' data-venc='09/09/2026' data-cidade='CURRAIS NOVOS' data-bairro='SANTA ISABEL                         ' data-rua='PO SANTA ISABEL' data-carga='20' data-de='MONO' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='FLORANIA' data-nota='4502083742' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='FLORANIA' data-bairro='CAJUEIRO                             ' data-rua='PO CAJUEIRO' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='FLORANIA' data-nota='4601612084' data-tipo='Modificação BT - Conexão GD Micro' data-venc='09/09/2026' data-cidade='SAO VICENTE' data-bairro='ZONA RURAL                           ' data-rua='SI PARA VELHO' data-carga='3,3' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='FLORANIA' data-nota='4601611173' data-tipo='Modificação BT - Conexão GD Micro' data-venc='09/09/2026' data-cidade='TENENTE LAURENTINO CRUZ' data-bairro='CENTRO                               ' data-rua='RUA ANTONIO MANOEL' data-carga='2,5' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='FLORANIA' data-nota='4502081287' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='TENENTE LAURENTINO CRUZ' data-bairro='ZONA RURAL                           ' data-rua='SI CANAFISTULA' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CURRAIS NOVOS' data-poli='FLORANIA' data-nota='4601611167' data-tipo='Mod BT Aumento Potência GD Micro' data-venc='09/09/2026' data-cidade='TENENTE LAURENTINO CRUZ' data-bairro='ZONA RURAL                           ' data-rua='SI CANAFISTULA' data-carga='12' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502083700' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='BARRA NOVA                           ' data-rua='RUA ALEXANDRE MANOEL DE MEDEIROS' data-carga='12' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502078637' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='BOA PASSAGEM                         ' data-rua='RUA JOSE VICENTE DE BARROS' data-carga='12' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4601609577' data-tipo='Substituir Ramal' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='BOA PASSAGEM                         ' data-rua='RUA SAO PAULO' data-carga='' data-de='MONO' data-para='MONO' data-cabocliente='' data-cabocosern='' data-disjuntor='' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502084358' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='AV SERIDO' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502083689' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='RUA AUGUSTO MONTEIRO' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4601609541' data-tipo='Alteração Contratual' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='RUA MANOEL POSSIDONIO' data-carga='15' data-de='TRIF' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502083702' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='RUA MARINHEIRO MANOEL INACIO' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502059117' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='RUA PEDRO VELHO' data-carga='8,65' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4601613098' data-tipo='Modificação BT - Conexão GD Micro' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='ITANS                                ' data-rua='RUA JOSE GUEDES' data-carga='15,74' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4601607506' data-tipo='Modif. BT - Projeto Existente GD Micro' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='NOVA CAICO                           ' data-rua='RUA GENTIL LINS DE ARAUJO' data-carga='8' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4601611486' data-tipo='Modificação BT - Conexão GD Micro' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='NOVA DESCOBERTA                      ' data-rua='RUA PADRE COSTA' data-carga='15' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502082665' data-tipo='Ligação Nova BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='PENEDO                               ' data-rua='RUA MARIA DE FATIMA GOMES' data-carga='19' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4601607504' data-tipo='Modificação BT - Conexão GD Micro' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='VILA ALTIVA                          ' data-rua='RUA JOEL DANTAS' data-carga='22' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502079226' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='WALFREDO GURGEL                      ' data-rua='RUA JOSE CIRINO DA SILVA' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502076612' data-tipo='Reativação BT' data-venc='08/09/2026' data-cidade='CAICO' data-bairro='WALFREDO GURGEL                      ' data-rua='RUA VENANCIO CANDIDO' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4601607511' data-tipo='Alteração Contratual' data-venc='09/09/2026' data-cidade='CAICO' data-bairro='BOA PASSAGEM                         ' data-rua='RUA JOSE PEREIRA DOS SANTOS' data-carga='15' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='16mm AL' data-disjuntor='63(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502080279' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='RUA AUGUSTO MONTEIRO' data-carga='8,65' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4601578399' data-tipo='Alteração Contratual' data-venc='09/09/2026' data-cidade='CAICO' data-bairro='CENTRO                               ' data-rua='RUA JOEL DAMASCENO' data-carga='28,7' data-de='MONO' data-para='TRIF' data-cabocliente='' data-cabocosern='16mm AL' data-disjuntor='50(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502080260' data-tipo='Reativação BT' data-venc='09/09/2026' data-cidade='CAICO' data-bairro='MAYNARD                              ' data-rua='RUA DESEMBARGADOR JOAO MAYNARD' data-carga='16,31' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502070364' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CAICO' data-bairro='PARAIBA                              ' data-rua='RUA MANOEL VICENTE' data-carga='19' data-de='TRIF' data-para='TRIF' data-cabocliente='' data-cabocosern='10mm AL' data-disjuntor='32(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502079277' data-tipo='Reativação BT' data-venc='09/09/2026' data-cidade='CAICO' data-bairro='SOLEDADE                             ' data-rua='RUA ALEXANDRE PEREIRA GOMES' data-carga='6' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502082446' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CAICO' data-bairro='ZONA RURAL                           ' data-rua='CH DOUTOR PIRES' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-<tr data-categoria='REGULADAS' data-base='CAICO' data-poli='CAICO' data-nota='4502079274' data-tipo='Ligação Nova BT' data-venc='09/09/2026' data-cidade='CAICO' data-bairro='ZONA RURAL                           ' data-rua='CH DOUTOR PIRES' data-carga='10' data-de='MONO' data-para='MONO' data-cabocliente='N/A' data-cabocosern='10mm AL' data-disjuntor='40(A)' data-medidor=''></tr>
-</tbody></table>
+<div id='loading' class='loading'>Carregando notas...</div>
 <div id='cards' class='cardsWrap'></div>
 <div id='empty' class='empty'>Nenhuma nota encontrada</div>
 </div>
 </main>
 <script>
-function normalizarTexto(valor){
-return String(valor||'')
-.normalize('NFD')
-.replace(/[\u0300-\u036f]/g,'')
-.replace(/\u00A0/g,' ')
-.replace(/[\u2013\u2014]/g,'-')
-.replace(/\s+/g,' ')
-.trim()
-.toUpperCase();
-}
+function normalizarTexto(valor){return String(valor||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\u00A0/g,' ').replace(/[\u2013\u2014]/g,'-').replace(/\s+/g,' ').trim().toUpperCase();}
 function somenteDataBR(s){if(!s)return '';s=String(s).trim();const m=s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(!m)return '';return String(m[1]).padStart(2,'0')+'/'+String(m[2]).padStart(2,'0')+'/'+m[3];}
-function parseDateFriendly(s){s=somenteDataBR(s);if(!s)return{cls:'',label:''};const p=s.split('/');if(p.length!==3)return{cls:'',label:s};const d=new Date(parseInt(p[2],10),parseInt(p[1],10)-1,parseInt(p[0],10));if(isNaN(d.getTime()))return{cls:'',label:s};const t=new Date();t.setHours(0,0,0,0);d.setHours(0,0,0,0);const diff=Math.round((d-t)/86400000);if(diff===0)return{cls:'due',label:'Hoje - '+s};if(diff===1)return{cls:'next',label:'Amanha - '+s};return{cls:'',label:s};}
+function parseDateFriendly(s){s=somenteDataBR(s);if(!s)return{cls:'',label:''};const p=s.split('/');if(p.length!==3)return{cls:'',label:s};const d=new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));const t=new Date();t.setHours(0,0,0,0);d.setHours(0,0,0,0);const diff=Math.round((d-t)/86400000);if(diff===0)return{cls:'due',label:'Hoje - '+s};if(diff===1)return{cls:'next',label:'Amanha - '+s};return{cls:'',label:s};}
 document.addEventListener('DOMContentLoaded',function(){
-const rows=[...document.querySelectorAll('#tblNotas tbody tr')];
 const cards=document.querySelector('#cards');
 const q=document.querySelector('#qSearch');
 const fBase=document.querySelector('#filtroBase');
 const fCid=document.querySelector('#filtroCidade');
 const cnt=document.querySelector('#contadorTotal');
 const empty=document.querySelector('#empty');
+const loading=document.querySelector('#loading');
 const categoryContent=document.querySelector('#categoryContent');
 const categoryButtons=[...document.querySelectorAll('.categoryButton')];
-const data=rows.map(function(tr){return Object.assign({},tr.dataset);});
+let data=[];
 let categoriaSelecionada='';
-let statusMap={};
-function getViatura(){
-let v=localStorage.getItem('viatura');
-if(!v){
-v=prompt('Digite o nome ou numero da viatura:');
-if(v)localStorage.setItem('viatura',v.trim());
-}
-return v||'nao informado';
-}
+function getViatura(){let v=localStorage.getItem('viatura');if(!v){v=prompt('Digite o nome ou numero da viatura:');if(v)localStorage.setItem('viatura',v.trim());}return v||'nao informado';}
 db.collection('notas').onSnapshot(function(snapshot){
-statusMap={};
-snapshot.forEach(function(doc){statusMap[doc.id]=doc.data();});
+data=[];
+snapshot.forEach(function(doc){const item=doc.data();item.nota=item.nota||doc.id;data.push(item);});
+loading.style.display='none';
 render();
-},function(err){console.error('Erro Firestore:',err);});
+},function(err){console.error('Erro Firestore:',err);loading.textContent='Erro ao carregar dados. Verifique a conexao.';});
 function loadBases(){
 fBase.innerHTML="<option value=''>Todas as bases</option>";
-const mapaBases=new Map();
-data.forEach(function(item){
-if(normalizarTexto(item.categoria)!==normalizarTexto(categoriaSelecionada))return;
-const base=String(item.base||'').trim();
-if(!base)return;
-const chave=normalizarTexto(base);
-if(!mapaBases.has(chave)){mapaBases.set(chave,base);}
-});
-const bases=Array.from(mapaBases.values());
-bases.sort(function(a,b){return a.localeCompare(b,'pt-BR');});
-bases.forEach(function(base){const opcao=document.createElement('option');opcao.value=base;opcao.textContent=base;fBase.appendChild(opcao);});
+const mapa=new Map();
+data.forEach(function(item){if(normalizarTexto(item.categoria)!==normalizarTexto(categoriaSelecionada))return;const valor=String(item.base||'').trim();if(valor&&!mapa.has(normalizarTexto(valor)))mapa.set(normalizarTexto(valor),valor);});
+Array.from(mapa.values()).sort(function(a,b){return a.localeCompare(b,'pt-BR');}).forEach(function(valor){const o=document.createElement('option');o.value=valor;o.textContent=valor;fBase.appendChild(o);});
 }
 function loadCities(){
-const cidadeSelecionada=fCid.value;
+const selecionada=fCid.value;
 fCid.innerHTML="<option value=''>Todas as cidades</option>";
-const baseSelecionada=fBase.value;
-const mapaCidades=new Map();
-data.forEach(function(item){
-if(normalizarTexto(item.categoria)!==normalizarTexto(categoriaSelecionada))return;
-if(baseSelecionada&&normalizarTexto(item.base)!==normalizarTexto(baseSelecionada))return;
-const cidade=String(item.cidade||'').trim();
-if(!cidade)return;
-const chave=normalizarTexto(cidade);
-if(!mapaCidades.has(chave)){mapaCidades.set(chave,cidade);}
-});
-const cidades=Array.from(mapaCidades.values());
-cidades.sort(function(a,b){return a.localeCompare(b,'pt-BR');});
-cidades.forEach(function(cidade){const opcao=document.createElement('option');opcao.value=cidade;opcao.textContent=cidade;fCid.appendChild(opcao);});
-const cidadeAindaExiste=cidades.some(function(cidade){return normalizarTexto(cidade)===normalizarTexto(cidadeSelecionada);});
-if(cidadeAindaExiste){fCid.value=cidadeSelecionada;}
+const mapa=new Map();
+data.forEach(function(item){if(normalizarTexto(item.categoria)!==normalizarTexto(categoriaSelecionada))return;if(fBase.value&&normalizarTexto(item.base)!==normalizarTexto(fBase.value))return;const valor=String(item.cidade||'').trim();if(valor&&!mapa.has(normalizarTexto(valor)))mapa.set(normalizarTexto(valor),valor);});
+Array.from(mapa.values()).sort(function(a,b){return a.localeCompare(b,'pt-BR');}).forEach(function(valor){const o=document.createElement('option');o.value=valor;o.textContent=valor;fCid.appendChild(o);});
+if(selecionada)fCid.value=selecionada;
 render();
 }
 function render(){
 cards.innerHTML='';
 if(!categoriaSelecionada){cnt.textContent='Total: 0';empty.style.display='none';return;}
 const txt=(q.value||'').trim();
-const selB=fBase.value;
-const selC=fCid.value;
 let shown=0;
 data.forEach(function(it){
 if(normalizarTexto(it.categoria)!==normalizarTexto(categoriaSelecionada))return;
-if(selB&&normalizarTexto(it.base)!==normalizarTexto(selB))return;
-if(selC&&normalizarTexto(it.cidade)!==normalizarTexto(selC))return;
-if(statusMap[it.nota]&&statusMap[it.nota].status==='concluido')return;
+if(fBase.value&&normalizarTexto(it.base)!==normalizarTexto(fBase.value))return;
+if(fCid.value&&normalizarTexto(it.cidade)!==normalizarTexto(fCid.value))return;
+if(normalizarTexto(it.status)==='CONCLUIDO')return;
 const hay=normalizarTexto((it.nota||'')+' '+(it.tipo||'')+' '+(it.cidade||'')+' '+(it.bairro||'')+' '+(it.rua||''));
 if(txt&&hay.indexOf(normalizarTexto(txt))===-1)return;
 const d=parseDateFriendly(it.venc);
@@ -391,31 +170,28 @@ const nota=document.createElement('div');nota.className='nota';nota.textContent=
 const tipo=document.createElement('div');tipo.className='tipo';tipo.textContent=it.tipo||'';
 top.appendChild(nota);top.appendChild(tipo);
 const addr=document.createElement('div');addr.className='addr';
-const linhaCidade=document.createElement('div');
+const cidadeLinha=document.createElement('div');
 const cidade=document.createElement('strong');cidade.textContent=it.cidade||'';
-linhaCidade.appendChild(cidade);linhaCidade.appendChild(document.createTextNode(' - '+(it.bairro||'')));
+cidadeLinha.appendChild(cidade);cidadeLinha.appendChild(document.createTextNode(' - '+(it.bairro||'')));
 const rua=document.createElement('div');rua.className='ruaCard';rua.textContent=it.rua||'';
-addr.appendChild(linhaCidade);addr.appendChild(rua);
+addr.appendChild(cidadeLinha);addr.appendChild(rua);
 const fields=document.createElement('div');fields.className='fields';
 const dp=document.createElement('div');dp.className='pill';dp.textContent=(it.de||'')+' > '+(it.para||'');
-const pc=document.createElement('div');pc.className='pill';pc.textContent='Carga: '+(it.carga||'--');
-fields.appendChild(dp);fields.appendChild(pc);
+const carga=document.createElement('div');carga.className='pill';carga.textContent='Carga: '+(it.carga||'--');
+fields.appendChild(dp);fields.appendChild(carga);
 const foot=document.createElement('div');foot.className='cardFooter';
 const dt=document.createElement('div');dt.className='dateStatus '+d.cls;dt.textContent=d.label||it.venc||'Sem data';
 const actions=document.createElement('div');actions.className='actions';
-const b1=document.createElement('button');b1.type='button';b1.className='btn ghost';b1.textContent='Detalhes';b1.onclick=function(){showModal(it);};
-const b2=document.createElement('button');b2.type='button';b2.className='btn primary';b2.textContent='Concluido';b2.onclick=function(){
+const detalhes=document.createElement('button');detalhes.type='button';detalhes.className='btn ghost';detalhes.textContent='Detalhes';detalhes.onclick=function(){showModal(it);};
+const concluir=document.createElement('button');concluir.type='button';concluir.className='btn primary';concluir.textContent='Concluido';
+concluir.onclick=function(){
 const viatura=getViatura();
-b2.disabled=true;b2.textContent='Salvando...';
-db.collection('notas').doc(it.nota).set({status:'concluido',concluidoPor:viatura,concluidoEm:firebase.firestore.FieldValue.serverTimestamp(),nota:it.nota,tipo:it.tipo||'',cidade:it.cidade||''},{merge:true}).then(function(){
+concluir.disabled=true;concluir.textContent='Salvando...';
+db.collection('notas').doc(String(it.nota)).set({status:'concluido',concluidoPor:viatura,concluidoEm:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).then(function(){
 card.style.opacity='0.4';setTimeout(function(){card.remove();updateCount();},180);
-}).catch(function(err){
-console.error(err);
-alert('Erro ao salvar. Verifique a internet e tente novamente.');
-b2.disabled=false;b2.textContent='Concluido';
-});
+}).catch(function(err){console.error(err);alert('Erro ao salvar. Verifique a internet e tente novamente.');concluir.disabled=false;concluir.textContent='Concluido';});
 };
-actions.appendChild(b1);actions.appendChild(b2);
+actions.appendChild(detalhes);actions.appendChild(concluir);
 foot.appendChild(dt);foot.appendChild(actions);
 card.appendChild(top);card.appendChild(addr);card.appendChild(fields);card.appendChild(foot);
 cards.appendChild(card);shown++;
@@ -432,21 +208,19 @@ const add=function(lbl,val){if(!val)return;const p=document.createElement('p');c
 add('Base',it.base);add('Poligonal',it.poli);add('Tipo de Servico',it.tipo);add('Data de Vencimento',it.venc);add('Cidade',it.cidade);add('Bairro',it.bairro);add('Rua',it.rua);add('Carga',it.carga);add('De',it.de);add('Para',it.para);add('Cabo Cliente',it.cabocliente);add('Cabo Cosern',it.cabocosern);add('Disjuntor',it.disjuntor);add('Medidor',it.medidor);
 const bt=document.createElement('button');bt.type='button';bt.className='btn primary';bt.textContent='Fechar';bt.onclick=function(){document.body.removeChild(m);};
 c.appendChild(bt);m.appendChild(c);document.body.appendChild(m);
-m.onclick=function(e){if(e.target===m){document.body.removeChild(m);}};
+m.onclick=function(e){if(e.target===m)document.body.removeChild(m);};
 }
 categoryButtons.forEach(function(botao){
 botao.addEventListener('click',function(){
 categoriaSelecionada=botao.dataset.categoria||'';
 categoryButtons.forEach(function(item){item.classList.toggle('active',item===botao);});
 categoryContent.classList.add('visible');
-q.value='';
-fCid.value='';
-loadBases();
-loadCities();
+q.value='';fBase.value='';fCid.value='';
+loadBases();loadCities();render();
 });
 });
 q.addEventListener('input',render);
-fBase.addEventListener('change',loadCities);
+fBase.addEventListener('change',function(){fCid.value='';loadCities();});
 fCid.addEventListener('change',render);
 });
 </script>
