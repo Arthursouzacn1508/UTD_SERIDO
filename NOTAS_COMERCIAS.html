@@ -121,6 +121,7 @@ body.auth-pending .app{visibility:hidden}.authLogout{position:fixed;right:12px;b
 </main>
 <script>
 function normalizarTexto(valor){return String(valor||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\u00A0/g,' ').replace(/[\u2013\u2014]/g,'-').replace(/\s+/g,' ').trim().toUpperCase();}
+function categoriaDaNota(item){const tipo=normalizarTexto(item.tipo);if(tipo.indexOf('VISITA DE COBRANCA')!==-1)return 'VISITA DE COBRANCA';if(tipo.indexOf('SUBST. EQUIPAMENTO MED. BT - ENLACE PEC')!==-1)return 'TROCA DE MEDIDOR';return normalizarTexto(item.categoria);}
 function somenteDataBR(s){if(!s)return '';s=String(s).trim();const m=s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(!m)return '';return String(m[1]).padStart(2,'0')+'/'+String(m[2]).padStart(2,'0')+'/'+m[3];}
 function parseDateFriendly(s){s=somenteDataBR(s);if(!s)return{cls:'',label:''};const p=s.split('/');if(p.length!==3)return{cls:'',label:s};const d=new Date(parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));const t=new Date();t.setHours(0,0,0,0);d.setHours(0,0,0,0);const diff=Math.round((d-t)/86400000);if(diff===0)return{cls:'due',label:'Hoje - '+s};if(diff===1)return{cls:'next',label:'Amanha - '+s};return{cls:'',label:s};}
 document.addEventListener('DOMContentLoaded',function(){
@@ -152,14 +153,14 @@ document.querySelector('#authLogout').addEventListener('click',PortalAuth.signOu
 function loadBases(){
 fBase.innerHTML="<option value=''>Todas as bases</option>";
 const mapa=new Map();
-data.forEach(function(item){if(normalizarTexto(item.categoria)!==normalizarTexto(categoriaSelecionada))return;const valor=String(item.base||'').trim();if(valor&&!mapa.has(normalizarTexto(valor)))mapa.set(normalizarTexto(valor),valor);});
+data.forEach(function(item){if(categoriaDaNota(item)!==normalizarTexto(categoriaSelecionada))return;const valor=String(item.base||'').trim();if(valor&&!mapa.has(normalizarTexto(valor)))mapa.set(normalizarTexto(valor),valor);});
 Array.from(mapa.values()).sort(function(a,b){return a.localeCompare(b,'pt-BR');}).forEach(function(valor){const o=document.createElement('option');o.value=valor;o.textContent=valor;fBase.appendChild(o);});
 }
 function loadCities(){
 const selecionada=fCid.value;
 fCid.innerHTML="<option value=''>Todas as cidades</option>";
 const mapa=new Map();
-data.forEach(function(item){if(normalizarTexto(item.categoria)!==normalizarTexto(categoriaSelecionada))return;if(fBase.value&&normalizarTexto(item.base)!==normalizarTexto(fBase.value))return;const valor=String(item.cidade||'').trim();if(valor&&!mapa.has(normalizarTexto(valor)))mapa.set(normalizarTexto(valor),valor);});
+data.forEach(function(item){if(categoriaDaNota(item)!==normalizarTexto(categoriaSelecionada))return;if(fBase.value&&normalizarTexto(item.base)!==normalizarTexto(fBase.value))return;const valor=String(item.cidade||'').trim();if(valor&&!mapa.has(normalizarTexto(valor)))mapa.set(normalizarTexto(valor),valor);});
 Array.from(mapa.values()).sort(function(a,b){return a.localeCompare(b,'pt-BR');}).forEach(function(valor){const o=document.createElement('option');o.value=valor;o.textContent=valor;fCid.appendChild(o);});
 if(selecionada)fCid.value=selecionada;
 render();
@@ -170,7 +171,7 @@ if(!categoriaSelecionada){cnt.textContent='Total: 0';empty.style.display='none';
 const txt=(q.value||'').trim();
 let shown=0;
 data.forEach(function(it){
-if(normalizarTexto(it.categoria)!==normalizarTexto(categoriaSelecionada))return;
+if(categoriaDaNota(it)!==normalizarTexto(categoriaSelecionada))return;
 if(fBase.value&&normalizarTexto(it.base)!==normalizarTexto(fBase.value))return;
 if(fCid.value&&normalizarTexto(it.cidade)!==normalizarTexto(fCid.value))return;
 if(normalizarTexto(it.status)==='CONCLUIDO')return;
