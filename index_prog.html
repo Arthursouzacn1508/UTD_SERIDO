@@ -6,6 +6,7 @@
 <meta name='description' content='Programacao STC'>
 <title>PROGRAMAÇÃO STC</title>
 <script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js'></script>
 <script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js'></script>
 <script>
 const firebaseConfig={
@@ -19,6 +20,7 @@ appId:'1:557076940494:web:366e4432084a50f8aef29f'
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 </script>
+<script src='portal-auth.js'></script>
 <style>
 :root{--verde:#00A443;--verde-escuro:#007B32;--verde-claro:#E8F8EF;--azul:#0DA9FE;--azul-claro:#E7F6FF;--branco:#fff;--fundo:#F3F7F5;--texto:#17372C;--texto-secundario:#65746F;--borda:#DCE7E2;--vermelho:#E9473F;--amarelo:#F2C84B;}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(180deg,#EDF8F2 0,var(--fundo) 320px);margin:0;color:var(--texto);min-height:100vh}button{font:inherit}
@@ -37,11 +39,13 @@ const db=firebase.firestore();
 .pillRow{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.pill{background:var(--azul-claro);color:#075D89;border-radius:8px;padding:8px 11px;font-size:12px}.pill.md,.pill.cargaAlta{background:var(--vermelho);color:#fff;font-weight:900}.medidor{font-size:12px;font-weight:900;margin-top:13px;text-transform:uppercase}.dateStatus{margin-top:11px;border-radius:9px;padding:9px;text-align:center;font-size:13px;font-weight:800}.dateStatus.due{background:var(--vermelho);color:#fff}.dateStatus.next{background:var(--amarelo);color:#000}.dateStatus.normal{background:var(--verde-claro);color:var(--verde-escuro)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}.btn{border:0;border-radius:10px;padding:10px 6px;font-size:13px;font-weight:900;cursor:pointer;transition:.18s}.btn:hover{filter:brightness(.96);transform:translateY(-1px)}.btn.ghost{background:var(--verde-claro);color:var(--verde-escuro)}.btn.ok{background:var(--verde);color:#fff}.btn:disabled{opacity:.65;cursor:wait}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}.modal-content{background:#fff;border-radius:18px;width:100%;max-width:470px;max-height:82vh;overflow:auto;padding:20px;box-shadow:0 18px 45px rgba(0,0,0,.30)}.modal h3{margin:0 0 14px;color:var(--verde-escuro);font-size:20px}.modal p{margin:8px 0;font-size:14px;line-height:1.45}.modalClose{margin-top:15px;width:100%;background:var(--verde);color:#fff;border:0;border-radius:10px;padding:11px;font-weight:900;cursor:pointer}
+body.auth-pending .app{visibility:hidden}.authLogout{position:fixed;right:12px;bottom:12px;z-index:9000;border:0;border-radius:9px;padding:10px 14px;background:#007B32;color:#fff;font-weight:800;cursor:pointer}
 @media(max-width:430px){.app{max-width:100%}.topbar,.detailHead{min-height:96px;padding:16px 86px 16px 15px}.headTitle,.detailTitle{font-size:21px}.headSub{font-size:9px}.portalBtn,.backBtn{right:8px;width:60px;font-size:11px}.summaryWrap,.cardsWrap{padding-left:11px;padding-right:11px}.teamCard{padding:14px 12px 12px}.teamName{font-size:16px}.teamActivity{font-size:13px;max-width:145px}.statBox{font-size:16px}.teamMembers{max-width:190px}}
 @media(max-width:350px){.topbar,.detailHead{padding-right:76px}.portalBtn,.backBtn{right:6px;width:53px;font-size:10px}.headTitle,.detailTitle{font-size:18px}.teamStats{gap:4px}.statBox{font-size:15px;padding-left:1px;padding-right:1px}.teamActivity{max-width:110px}}@media(min-width:700px){.app{margin:12px auto;border-radius:22px;min-height:calc(100vh - 24px)}}
 </style>
 </head>
-<body>
+<body class='auth-pending'>
+<button id='authLogout' class='authLogout' type='button'>Sair</button>
 <div class='app'>
 <section id='viewResumo'>
 <div class='topbar'><div class='headText'><div class='headTitle'>PROGRAMAÇÃO STC</div><div class='headSub' id='dataHoraAtual'>Carregando atualização...</div></div>
@@ -50,13 +54,14 @@ const db=firebase.firestore();
 </section>
 <section id='viewDetalhe' style='display:none'><div class='detailHead'><div class='detailTitle' id='equipeSelecionada'></div><button type='button' class='backBtn' onclick='voltarResumo()'><svg class='homeIcon' viewBox='0 0 24 24'><path d='M12 2.5L2.5 10.4V21h6.2v-6.3h6.6V21h6.2V10.4z'></path></svg><span>Voltar</span></button></div><div class='teamLine'><span id='qtdEquipe'></span></div><div id='cards' class='cardsWrap'></div><div id='emptyEquipe' class='empty'>Nenhuma nota aberta para esta equipe.</div></section>
 <script>
-var allData=[];var equipeAtual='';
+var allData=[];var equipeAtual='';var activeProfile=null;
 function norm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim().toUpperCase();}
 function esc(v){return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
 function somenteDataBR(s){s=String(s||'').trim();var m=s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(!m)return '';return String(m[1]).padStart(2,'0')+'/'+String(m[2]).padStart(2,'0')+'/'+m[3];}
 function dateInfo(s){s=somenteDataBR(s);if(!s)return{ord:99999,cls:'normal',label:'Sem data'};var p=s.split('/');var d=new Date(+p[2],+p[1]-1,+p[0]);var h=new Date();h.setHours(0,0,0,0);d.setHours(0,0,0,0);var diff=Math.round((d-h)/86400000);if(diff===0)return{ord:0,cls:'due',label:'Hoje - '+s};if(diff===1)return{ord:1,cls:'next',label:'Amanhã - '+s};return{ord:diff<0?2:diff+10,cls:'normal',label:s};}
 function abertas(){return allData.filter(function(x){return norm(x.status)!=='CONCLUIDO';});}
-db.collection('programacao_stc').onSnapshot(function(snapshot){allData=[];snapshot.forEach(function(doc){var x=doc.data();x.nota=x.nota||doc.id;x.docId=doc.id;allData.push(x);});document.getElementById('loading').style.display='none';atualizarCabecalho();renderResumo();if(equipeAtual)renderEquipe(equipeAtual);},function(err){console.error(err);document.getElementById('loading').textContent='Erro ao carregar os dados. Verifique a conexão.';});
+PortalAuth.requireProfile().then(function(profile){activeProfile=profile;document.body.classList.remove('auth-pending');var query=db.collection('programacao_stc').where('status','==','aberto').where('utd','==',profile.utd);if(profile.perfil==='ELETRICISTA')query=query.where('equipe','==',profile.viatura);query.onSnapshot(function(snapshot){allData=[];snapshot.forEach(function(doc){var x=doc.data();x.nota=x.nota||doc.id;x.docId=doc.id;allData.push(x);});document.getElementById('loading').style.display='none';atualizarCabecalho();renderResumo();if(equipeAtual)renderEquipe(equipeAtual);},function(err){console.error(err);document.getElementById('loading').textContent='Não foi possível carregar os dados autorizados.';});}).catch(function(err){console.error(err);});
+document.getElementById('authLogout').addEventListener('click',PortalAuth.signOut);
 function atualizarCabecalho(){var txt='';allData.some(function(x){if(x.atualizacaoCarteira){txt=x.atualizacaoCarteira;return true;}return false;});document.getElementById('dataHoraAtual').textContent=txt?'Última atualização: '+txt:'Programação sem registros';}
 function renderResumo(){var wrap=document.getElementById('summaryWrap');var vazia=document.getElementById('emptyResumo');var lista=abertas();var mapa={};
 lista.forEach(function(x){var eq=String(x.equipe||'').trim();if(!eq)return;if(!mapa[eq])mapa[eq]={equipe:eq,atividade:x.atividade||'',membro1:x.membro1||'',membro2:x.membro2||'',total:0,venc:0,trif:0,mono:0,md:0};
@@ -76,7 +81,7 @@ out+=`<div class='card' data-docid='${esc(it.docId)}'><div class='nota'>${esc(it
 out+=`<div class='pillRow'><div class='pill'>${esc(it.de||'')} &gt; ${esc(it.para||'')}</div><div class='pill${classeCarga}'>Carga: ${esc(it.carga||'—')}</div>${String(it.md200a||'0')==='1'?`<div class='pill md'>MD 200A</div>`:''}</div>`;
 out+=`<div class='medidor'>MEDIDOR A SER UTILIZADO: ${esc(it.medidorUso||'—')}</div><div class='dateStatus ${dt.cls}'>${esc(dt.label)}</div><div class='actions'><button class='btn ghost' type='button'>Detalhes</button><button class='btn ok' type='button'>Concluído</button></div></div>`;});
 cards.innerHTML=out;vazio.style.display=lista.length?'none':'block';cards.querySelectorAll('.card').forEach(function(card){var it=lista.find(function(x){return x.docId===card.dataset.docid;});card.querySelector('.ghost').onclick=function(){showModal(it);};card.querySelector('.ok').onclick=function(){concluirNota(it,this);};});}
-function concluirNota(it,btn){if(!it||!confirm('Marcar a nota '+it.nota+' como concluída?'))return;btn.disabled=true;btn.textContent='Salvando...';db.collection('programacao_stc').doc(String(it.docId)).set({status:'concluido',concluidoPor:String(it.equipe||''),concluidoEm:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(function(err){console.error(err);alert('Erro ao salvar. Verifique a internet e tente novamente.');btn.disabled=false;btn.textContent='Concluído';});}
+function concluirNota(it,btn){if(!it||!confirm('Marcar a nota '+it.nota+' como concluída?'))return;btn.disabled=true;btn.textContent='Salvando...';db.collection('programacao_stc').doc(String(it.docId)).set({status:'concluido',concluidoPor:String(activeProfile&& (activeProfile.viatura||activeProfile.login)||''),concluidoEm:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(function(err){console.error(err);alert('Erro ao salvar. Verifique a internet e tente novamente.');btn.disabled=false;btn.textContent='Concluído';});}
 function showModal(it){if(!it)return;var m=document.createElement('div');m.className='modal';var c=document.createElement('div');c.className='modal-content';var h=`<h3>Nota ${esc(it.nota||'')}</h3>`;function add(l,v){if(v)h+=`<p><b>${esc(l)}: </b>${esc(v)}</p>`;}add('Equipe',it.equipe);add('Atividade',it.atividade);add('Tipo de Serviço',it.tipo);add('Data de Vencimento',it.venc);add('Cidade',it.cidade);add('Bairro',it.bairro);add('Rua',it.rua);add('Carga',it.carga);add('MEDIDOR A SER UTILIZADO',it.medidorUso);add('De',it.de);add('Para',it.para);add('Cabo Cliente',it.caboCliente);add('Cabo Cosern',it.caboCosern);add('Disjuntor',it.disjuntor);add('Medidor atual',it.medidorAtual);if(String(it.md200a||'0')==='1')add('MD200A','Sim');h+=`<button class='modalClose'>Fechar</button>`;c.innerHTML=h;m.appendChild(c);document.body.appendChild(m);c.querySelector('.modalClose').onclick=function(){m.remove();};m.onclick=function(e){if(e.target===m)m.remove();};}
 </script>
 </div>

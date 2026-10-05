@@ -16,6 +16,21 @@
 
     <title>UTD Seridó | Portal</title>
 
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script>
+      const firebaseConfig = {
+        apiKey: 'AIzaSyAgFRfZanBfDCK79eWEMWONEg-oppkB2as',
+        authDomain: 'programacao-stc.firebaseapp.com',
+        projectId: 'programacao-stc',
+        storageBucket: 'programacao-stc.firebasestorage.app',
+        messagingSenderId: '557076940494',
+        appId: '1:557076940494:web:366e4432084a50f8aef29f'
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
+
     <style>
 
         /* =====================================================
@@ -824,15 +839,47 @@
                     }
                 }
     </style>
+    <style>
+      .login-wrap{max-width:500px;margin:8vh auto;padding:28px;background:#fff;border:1px solid #DCE7E2;border-radius:18px;box-shadow:0 10px 30px rgba(20,66,49,.10)}
+      .login-wrap h1{color:#007B32;margin:0 0 8px}.login-wrap p{margin:0 0 18px;color:#65746F}
+      .profile-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+      .profile-option{min-height:50px;border:1px solid #007B32;border-radius:10px;background:#fff;color:#007B32;font-weight:800;cursor:pointer}
+      .profile-option.active{background:#00A443;color:#fff}
+      .login-wrap label{display:block;margin:12px 0 6px;font-weight:700}
+      .login-wrap input{width:100%;min-height:46px;padding:10px 12px;border:1px solid #DCE7E2;border-radius:9px;font:inherit}
+      .login-submit{width:100%;min-height:48px;margin-top:18px;border:0;border-radius:10px;background:#00A443;color:#fff;font:inherit;font-weight:800;cursor:pointer}
+      .login-submit:disabled{opacity:.6;cursor:wait}.login-error{min-height:22px;margin-top:12px;color:#b42318;font-size:14px}
+      .logout-btn{position:absolute;right:18px;top:18px;border:1px solid #fff;border-radius:8px;padding:8px 12px;background:transparent;color:#fff;font-weight:700;cursor:pointer}
+      @media(max-width:600px){.login-wrap{margin:5vh 14px;padding:22px}.logout-btn{top:12px;right:12px}}
+    </style>
 </head>
 
 <body>
+    <section id="loginPanel" class="login-wrap" aria-labelledby="loginHeading">
+      <h1 id="loginHeading">Acesso ao Portal UTD</h1>
+      <p>Selecione seu perfil e informe seu usuário ou viatura.</p>
+      <div class="profile-options" role="group" aria-label="Perfil de acesso">
+        <button type="button" class="profile-option" data-profile="ELETRICISTA">ELETRICISTA</button>
+        <button type="button" class="profile-option" data-profile="BACKOFFICE">BACKOFFICE</button>
+      </div>
+      <form id="loginForm">
+        <label id="loginLabel" for="loginIdentifier">Usuário ou viatura</label>
+        <input id="loginIdentifier" autocomplete="username" required>
+        <label for="loginPassword">Senha</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
+        <button id="loginSubmit" class="login-submit" type="submit">Entrar</button>
+        <div id="loginError" class="login-error" role="alert"></div>
+      </form>
+    </section>
+    <div id="portalMain" hidden>
 
     <!-- =====================================================
          CABEÇALHO
     ====================================================== -->
 
     <header class="topo">
+
+        <button id="logoutButton" class="logout-btn" type="button">Sair</button>
 
         <div class="topo-conteudo">
 
@@ -991,6 +1038,66 @@
         <span> • Uso interno</span>
 
     </footer>
+
+    </div>
+    <script src="portal-auth.js"></script>
+    <script>
+      (function () {
+        const panel = document.getElementById('loginPanel');
+        const main = document.getElementById('portalMain');
+        const form = document.getElementById('loginForm');
+        const error = document.getElementById('loginError');
+        const label = document.getElementById('loginLabel');
+        const identifier = document.getElementById('loginIdentifier');
+        const password = document.getElementById('loginPassword');
+        const submit = document.getElementById('loginSubmit');
+        let selectedProfile = '';
+
+        document.querySelectorAll('.profile-option').forEach(function (button) {
+          button.addEventListener('click', function () {
+            selectedProfile = button.dataset.profile;
+            document.querySelectorAll('.profile-option').forEach(function (item) {
+              item.classList.toggle('active', item === button);
+            });
+            label.textContent = selectedProfile === 'ELETRICISTA' ? 'Viatura' : 'E-mail ou usuário';
+            identifier.placeholder = selectedProfile === 'ELETRICISTA'
+              ? 'Código da viatura'
+              : 'E-mail cadastrado ou usuário';
+            identifier.focus();
+          });
+        });
+
+        function showPortal(profile) {
+          panel.hidden = true;
+          main.hidden = false;
+          document.body.dataset.perfil = profile.perfil;
+        }
+
+        firebase.auth().onAuthStateChanged(function (user) {
+          if (!user) return;
+          PortalAuth.getProfile(user).then(showPortal).catch(function () {
+            firebase.auth().signOut();
+          });
+        });
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          error.textContent = '';
+          if (!selectedProfile) {
+            error.textContent = 'Selecione ELETRICISTA ou BACKOFFICE.';
+            return;
+          }
+          submit.disabled = true;
+          submit.textContent = 'Entrando...';
+          PortalAuth.signIn(identifier.value, password.value, selectedProfile)
+            .then(showPortal)
+            .catch(function (err) { error.textContent = err.message || 'Não foi possível entrar.'; })
+            .finally(function () { submit.disabled = false; submit.textContent = 'Entrar'; });
+        });
+
+        document.getElementById('logoutButton').addEventListener('click', PortalAuth.signOut);
+      })();
+    </script>
 
 </body>
 

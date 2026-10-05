@@ -6,6 +6,7 @@
 <meta name='description' content='Carteira de Notas Comerciais'>
 <title>CARTEIRA DE NOTAS</title>
 <script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js'></script>
+<script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js'></script>
 <script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js'></script>
 <script>
 const firebaseConfig={
@@ -19,6 +20,7 @@ appId:'1:557076940494:web:366e4432084a50f8aef29f'
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 </script>
+<script src='portal-auth.js'></script>
 <style>
 :root{--verde:#00A443;--verde-escuro:#007B32;--verde-claro:#E8F8EF;--azul:#0DA9FE;--azul-claro:#E7F6FF;--laranja:#FF9C1A;--branco:#FFFFFF;--fundo:#F3F7F5;--texto:#17372C;--texto-secundario:#65746F;--borda:#DCE7E2;--vermelho:#E9473F;--amarelo:#F2C84B;}
 *{box-sizing:border-box;}
@@ -80,9 +82,11 @@ button,input,select{font:inherit;}
 @media(max-width:430px){.appbar{min-height:96px;padding:16px 86px 16px 15px;}.title{font-size:21px;}.updated{font-size:9px;}.backPortal{right:8px;width:60px;font-size:11px;}.content{padding-left:11px;padding-right:11px;}.card{padding:15px;}}
 @media(max-width:350px){.appbar{padding-right:75px;}.title{font-size:19px;}.backPortal{right:5px;width:53px;font-size:10px;}.categorySelector{gap:7px;}.categoryButton{font-size:12px;padding:8px 5px;}.actions{gap:6px;}.btn{font-size:12px;}}
 @media(min-width:700px){.app{margin:12px auto;border-radius:22px;min-height:calc(100vh - 24px);}}
+body.auth-pending .app{visibility:hidden}.authLogout{position:fixed;right:12px;bottom:12px;z-index:9000;border:0;border-radius:9px;padding:10px 14px;background:#007B32;color:#fff;font-weight:800;cursor:pointer}
 </style>
 </head>
-<body>
+<body class='auth-pending'>
+<button id='authLogout' class='authLogout' type='button'>Sair</button>
 <div class='app'>
 <header class='appbar'>
 <div class='headerText'>
@@ -130,14 +134,21 @@ const loading=document.querySelector('#loading');
 const categoryContent=document.querySelector('#categoryContent');
 const categoryButtons=[...document.querySelectorAll('.categoryButton')];
 let data=[];
+let activeProfile=null;
 let categoriaSelecionada='';
-function getViatura(){let v=localStorage.getItem('viatura');if(!v){v=prompt('Digite o nome ou numero da viatura:');if(v)localStorage.setItem('viatura',v.trim());}return v||'nao informado';}
-db.collection('notas').onSnapshot(function(snapshot){
+PortalAuth.requireProfile().then(function(profile){
+activeProfile=profile;
+document.body.classList.remove('auth-pending');
+let noteQuery=db.collection('notas').where('status','==','aberto').where('utd','==',profile.utd);
+if(profile.perfil==='ELETRICISTA')noteQuery=noteQuery.where('base','==',profile.base);
+noteQuery.onSnapshot(function(snapshot){
 data=[];
 snapshot.forEach(function(doc){const item=doc.data();item.nota=item.nota||doc.id;data.push(item);});
 loading.style.display='none';
 render();
 },function(err){console.error('Erro Firestore:',err);loading.textContent='Erro ao carregar dados. Verifique a conexao.';});
+}).catch(function(err){console.error(err);});
+document.querySelector('#authLogout').addEventListener('click',PortalAuth.signOut);
 function loadBases(){
 fBase.innerHTML="<option value=''>Todas as bases</option>";
 const mapa=new Map();
@@ -187,7 +198,7 @@ const actions=document.createElement('div');actions.className='actions';
 const detalhes=document.createElement('button');detalhes.type='button';detalhes.className='btn ghost';detalhes.textContent='Detalhes';detalhes.onclick=function(){showModal(it);};
 const concluir=document.createElement('button');concluir.type='button';concluir.className='btn primary';concluir.textContent='Concluido';
 concluir.onclick=function(){
-const viatura=getViatura();
+const viatura=activeProfile?String(activeProfile.viatura||activeProfile.login):'';
 concluir.disabled=true;concluir.textContent='Salvando...';
 db.collection('notas').doc(String(it.nota)).set({status:'concluido',concluidoPor:viatura,concluidoEm:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).then(function(){
 card.style.opacity='0.4';setTimeout(function(){card.remove();updateCount();},180);
