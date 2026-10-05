@@ -30,6 +30,7 @@ const db=firebase.firestore();
 .headText{position:relative;z-index:2;flex:1;text-align:left;line-height:1.15;min-width:0}.headTitle,.detailTitle{position:relative;z-index:2;font-size:25px;font-weight:900;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.headSub{display:none!important}
 .portalBtn,.backBtn{position:absolute;z-index:4;right:17px;top:50%;transform:translateY(-50%);width:66px;min-height:63px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px;background:transparent;border:0;border-radius:12px;color:#fff;text-decoration:none;text-align:center;font-size:12px;font-weight:900;cursor:pointer}.portalBtn:hover,.backBtn:hover{background:rgba(255,255,255,.16)}.homeIcon{width:29px;height:29px;display:block;fill:#fff}
 .summaryWrap{padding:10px 16px 19px}.loading,.empty{padding:32px 16px;text-align:center;color:var(--texto-secundario);font-weight:700}.empty{display:none}
+.callbackNotice{margin:0 16px 24px;padding:16px;background:#fff;border:1px solid var(--borda);border-left:3px solid #8ac5a4;border-radius:14px;color:var(--texto);box-shadow:0 4px 14px rgba(20,66,49,.05)}.callbackNotice h2{margin:0 0 8px;color:var(--verde-escuro);font-size:15px;line-height:1.3}.callbackNotice p{margin:0 0 12px;color:var(--texto-secundario);font-size:13px;line-height:1.5}.callbackNotice h3{margin:0 0 7px;font-size:13px}.callbackList{list-style:none;margin:0;padding:0}.callbackList li{position:relative;margin:7px 0;padding-left:19px;font-size:13px;line-height:1.45}.callbackList li:before{content:'✓';position:absolute;left:0;top:0;color:var(--verde-escuro);font-weight:900}.callbackNotice .callbackFooter{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--borda);font-size:12px;font-weight:700;color:var(--texto-secundario)}
 .teamCard{position:relative;overflow:hidden;background:#fff;border:1px solid var(--borda);border-top:4px solid var(--verde);border-radius:18px;padding:16px 16px 13px;margin:10px 0 14px;box-shadow:0 7px 21px rgba(20,66,49,.09);cursor:pointer;transition:.22s}.teamCard:hover{transform:translateY(-3px);border-color:var(--verde);box-shadow:0 13px 28px rgba(20,66,49,.15)}
 .teamTop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px}.teamName{font-size:18px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.teamActivity{font-size:15px;font-weight:900;text-align:right;white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
 .teamStats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.statBox{background:var(--verde-claro);border-radius:10px;text-align:center;padding:9px 3px 7px;color:var(--verde-escuro);font-size:18px;font-weight:900;line-height:1}.statBox span{display:block;color:var(--texto);font-size:10px;font-weight:500;margin-top:6px}.statBox.venc{background:#FDEBE9;color:var(--vermelho)}
@@ -51,6 +52,21 @@ body.auth-pending .app{visibility:hidden}.authLogout{position:fixed;right:12px;b
 <div class='topbar'><div class='headText'><div class='headTitle'>PROGRAMAÇÃO STC</div><div class='headSub' id='dataHoraAtual'>Carregando atualização...</div></div>
 <a class='portalBtn' href='index.html' aria-label='Voltar ao Portal'><svg class='homeIcon' viewBox='0 0 24 24'><path d='M12 2.5L2.5 10.4V21h6.2v-6.3h6.6V21h6.2V10.4z'></path></svg><span>Voltar</span></a></div>
 <div id='loading' class='loading'>Carregando programação...</div><div id='summaryWrap' class='summaryWrap'></div><div id='emptyResumo' class='empty'>Nenhuma nota aberta encontrada.</div>
+<aside class='callbackNotice' aria-labelledby='callbackTitle'>
+<h2 id='callbackTitle'>Antes de sair para o atendimento</h2>
+<p>Os indicadores acima mostram a quantidade e o perfil das notas programadas para hoje. Confiram os medidores e separem os materiais necessários antes de sair.</p>
+<h3>No contato com o cliente, confirmem:</h3>
+<ul class='callbackList'>
+<li>Nome completo e endereço: rua, número, bairro e cidade.</li>
+<li>Serviço solicitado e se corresponde ao que está descrito na nota.</li>
+<li>Período combinado e se haverá alguém no local para acompanhar a equipe.</li>
+<li>Tensão e carga previstas para a instalação.</li>
+<li>Se o padrão de entrada está concluído, acessível e sem pendências que impeçam o serviço.</li>
+<li>Se há dificuldade de acesso, como portão trancado ou animal solto.</li>
+<li>Se possível, peçam fotos da frente do imóvel, do padrão de entrada e do local de instalação.</li>
+</ul>
+<p class='callbackFooter'>Se encontrarem divergência ou algum impedimento, avisem o BackOffice antes do deslocamento.</p>
+</aside>
 </section>
 <section id='viewDetalhe' style='display:none'><div class='detailHead'><div class='detailTitle' id='equipeSelecionada'></div><button type='button' class='backBtn' onclick='voltarResumo()'><svg class='homeIcon' viewBox='0 0 24 24'><path d='M12 2.5L2.5 10.4V21h6.2v-6.3h6.6V21h6.2V10.4z'></path></svg><span>Voltar</span></button></div><div class='teamLine'><span id='qtdEquipe'></span></div><div id='cards' class='cardsWrap'></div><div id='emptyEquipe' class='empty'>Nenhuma nota aberta para esta equipe.</div></section>
 <script>
