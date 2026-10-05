@@ -137,11 +137,12 @@ const categoryButtons=[...document.querySelectorAll('.categoryButton')];
 let data=[];
 let activeProfile=null;
 let categoriaSelecionada='';
+function basesPermitidasDoPerfil(profile){const lista=Array.isArray(profile.basesPermitidas)?profile.basesPermitidas:[];const normalizadas=[...new Set(lista.map(function(base){return String(base||'').trim();}).filter(Boolean))];return normalizadas.length?normalizadas:(profile.base?[String(profile.base).trim()]:[]);}
 PortalAuth.requireProfile().then(function(profile){
 activeProfile=profile;
 document.body.classList.remove('auth-pending');
 let noteQuery=db.collection('notas').where('status','==','aberto').where('utd','==',profile.utd);
-if(profile.perfil==='ELETRICISTA')noteQuery=noteQuery.where('base','==',profile.base);
+if(profile.perfil==='ELETRICISTA'){const basesPermitidas=basesPermitidasDoPerfil(profile);if(!basesPermitidas.length){loading.textContent='Nenhuma base autorizada está configurada para esta viatura.';return;}noteQuery=noteQuery.where('base',basesPermitidas.length===1?'==':'in',basesPermitidas.length===1?basesPermitidas[0]:basesPermitidas);}
 noteQuery.onSnapshot(function(snapshot){
 data=[];
 snapshot.forEach(function(doc){const item=doc.data();item.nota=item.nota||doc.id;data.push(item);});
