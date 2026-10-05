@@ -1,105 +1,2213 @@
 ﻿<!doctype html>
-<html lang='pt-BR'>
+<html lang="pt-BR">
 <head>
-<meta charset='utf-8'>
-<meta name='viewport' content='width=device-width,initial-scale=1'>
-<meta name='description' content='Programacao STC'>
-<title>PROGRAMAÇÃO STC</title>
-<script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js'></script>
-<script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js'></script>
-<script src='https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js'></script>
-<script>
-const firebaseConfig={
-apiKey:'AIzaSyAgFRfZanBfDCK79eWEMWONEg-oppkB2as',
-authDomain:'programacao-stc.firebaseapp.com',
-projectId:'programacao-stc',
-storageBucket:'programacao-stc.firebasestorage.app',
-messagingSenderId:'557076940494',
-appId:'1:557076940494:web:366e4432084a50f8aef29f'
-};
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
-</script>
-<script src='portal-auth.js'></script>
-<style>
-:root{--verde:#00A443;--verde-escuro:#007B32;--verde-claro:#E8F8EF;--azul:#0DA9FE;--azul-claro:#E7F6FF;--branco:#fff;--fundo:#F3F7F5;--texto:#17372C;--texto-secundario:#65746F;--borda:#DCE7E2;--vermelho:#E9473F;--amarelo:#F2C84B;}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{font-family:'Segoe UI',Roboto,Arial,sans-serif;background:linear-gradient(180deg,#EDF8F2 0,var(--fundo) 320px);margin:0;color:var(--texto);min-height:100vh}button{font:inherit}
-.app{width:100%;max-width:520px;min-height:100vh;margin:0 auto;background:var(--fundo);box-shadow:0 0 35px rgba(20,66,49,.10);overflow:hidden}
-.topbar,.detailHead{position:relative;min-height:104px;background:linear-gradient(125deg,var(--verde-escuro) 0%,var(--verde) 58%,#08B85A 100%);color:#fff;display:flex;align-items:center;justify-content:flex-start;padding:18px 100px 18px 20px;overflow:hidden}
-.topbar:after,.detailHead:after{content:'';position:absolute;width:105px;height:105px;right:-55px;top:-62px;border:20px solid rgba(13,169,254,.18);border-radius:50%}
-.headText{position:relative;z-index:2;flex:1;text-align:left;line-height:1.15;min-width:0}.headTitle,.detailTitle{position:relative;z-index:2;font-size:25px;font-weight:900;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.headSub{display:none!important}
-.portalBtn,.backBtn{position:absolute;z-index:4;right:17px;top:50%;transform:translateY(-50%);width:66px;min-height:63px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px;background:transparent;border:0;border-radius:12px;color:#fff;text-decoration:none;text-align:center;font-size:12px;font-weight:900;cursor:pointer}.portalBtn:hover,.backBtn:hover{background:rgba(255,255,255,.16)}.homeIcon{width:29px;height:29px;display:block;fill:#fff}
-.summaryWrap{padding:10px 16px 19px}.loading,.empty{padding:32px 16px;text-align:center;color:var(--texto-secundario);font-weight:700}.empty{display:none}
-.callbackNotice{margin:0 16px 24px;padding:16px;background:#fff;border:1px solid var(--borda);border-left:3px solid #8ac5a4;border-radius:14px;color:var(--texto);box-shadow:0 4px 14px rgba(20,66,49,.05)}.callbackNotice h2{margin:0 0 8px;color:var(--verde-escuro);font-size:15px;line-height:1.3}.callbackNotice p{margin:0 0 12px;color:var(--texto-secundario);font-size:13px;line-height:1.5}.callbackNotice h3{margin:0 0 7px;font-size:13px}.callbackList{list-style:none;margin:0;padding:0}.callbackList li{position:relative;margin:7px 0;padding-left:19px;font-size:13px;line-height:1.45}.callbackList li:before{content:'✓';position:absolute;left:0;top:0;color:var(--verde-escuro);font-weight:900}.callbackNotice .callbackFooter{margin:12px 0 0;padding-top:10px;border-top:1px solid var(--borda);font-size:12px;font-weight:700;color:var(--texto-secundario)}
-.teamCard{position:relative;overflow:hidden;background:#fff;border:1px solid var(--borda);border-top:4px solid var(--verde);border-radius:18px;padding:16px 16px 13px;margin:10px 0 14px;box-shadow:0 7px 21px rgba(20,66,49,.09);cursor:pointer;transition:.22s}.teamCard:hover{transform:translateY(-3px);border-color:var(--verde);box-shadow:0 13px 28px rgba(20,66,49,.15)}
-.teamTop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px}.teamName{font-size:18px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.teamActivity{font-size:15px;font-weight:900;text-align:right;white-space:nowrap;max-width:180px;overflow:hidden;text-overflow:ellipsis}
-.teamStats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.statBox{background:var(--verde-claro);border-radius:10px;text-align:center;padding:9px 3px 7px;color:var(--verde-escuro);font-size:18px;font-weight:900;line-height:1}.statBox span{display:block;color:var(--texto);font-size:10px;font-weight:500;margin-top:6px}.statBox.venc{background:#FDEBE9;color:var(--vermelho)}
-.teamFooter{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}.teamTotal{font-size:13px;font-weight:800;color:var(--verde-escuro);white-space:nowrap}.teamMembers{font-size:12px;color:var(--texto-secundario);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:255px}
-.teamLine{display:flex;justify-content:flex-end;align-items:center;padding:13px 20px 5px}.teamLine span{color:var(--verde-escuro);background:var(--verde-claro);padding:6px 10px;border-radius:50px;font-size:12px;font-weight:800}.cardsWrap{padding:0 16px 20px}
-.card{background:#fff;border:1px solid var(--borda);border-top:4px solid var(--azul);border-radius:18px;padding:17px 17px 15px;margin:10px 0 16px;box-shadow:0 7px 20px rgba(20,66,49,.09);font-size:14px}.nota{font-size:17px;font-weight:900}.servico{font-size:12px;margin-top:3px;color:var(--texto-secundario)}.cidade{font-size:15px;margin-top:12px}.rua{font-size:14px;margin-top:3px;color:var(--texto-secundario);line-height:1.4}
-.pillRow{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.pill{background:var(--azul-claro);color:#075D89;border-radius:8px;padding:8px 11px;font-size:12px}.pill.md,.pill.cargaAlta{background:var(--vermelho);color:#fff;font-weight:900}.medidor{font-size:12px;font-weight:900;margin-top:13px;text-transform:uppercase}.dateStatus{margin-top:11px;border-radius:9px;padding:9px;text-align:center;font-size:13px;font-weight:800}.dateStatus.due{background:var(--vermelho);color:#fff}.dateStatus.next{background:var(--amarelo);color:#000}.dateStatus.normal{background:var(--verde-claro);color:var(--verde-escuro)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}.btn{border:0;border-radius:10px;padding:10px 6px;font-size:13px;font-weight:900;cursor:pointer;transition:.18s}.btn:hover{filter:brightness(.96);transform:translateY(-1px)}.btn.ghost{background:var(--verde-claro);color:var(--verde-escuro)}.btn.ok{background:var(--verde);color:#fff}.btn:disabled{opacity:.65;cursor:wait}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9999;padding:16px}.modal-content{background:#fff;border-radius:18px;width:100%;max-width:470px;max-height:82vh;overflow:auto;padding:20px;box-shadow:0 18px 45px rgba(0,0,0,.30)}.modal h3{margin:0 0 14px;color:var(--verde-escuro);font-size:20px}.modal p{margin:8px 0;font-size:14px;line-height:1.45}.modalClose{margin-top:15px;width:100%;background:var(--verde);color:#fff;border:0;border-radius:10px;padding:11px;font-weight:900;cursor:pointer}
-body.auth-pending .app{visibility:hidden}.authLogout{position:fixed;right:12px;bottom:12px;z-index:9000;border:0;border-radius:9px;padding:10px 14px;background:#007B32;color:#fff;font-weight:800;cursor:pointer}
-@media(max-width:430px){.app{max-width:100%}.topbar,.detailHead{min-height:96px;padding:16px 86px 16px 15px}.headTitle,.detailTitle{font-size:21px}.headSub{font-size:9px}.portalBtn,.backBtn{right:8px;width:60px;font-size:11px}.summaryWrap,.cardsWrap{padding-left:11px;padding-right:11px}.teamCard{padding:14px 12px 12px}.teamName{font-size:16px}.teamActivity{font-size:13px;max-width:145px}.statBox{font-size:16px}.teamMembers{max-width:190px}}
-@media(max-width:350px){.topbar,.detailHead{padding-right:76px}.portalBtn,.backBtn{right:6px;width:53px;font-size:10px}.headTitle,.detailTitle{font-size:18px}.teamStats{gap:4px}.statBox{font-size:15px;padding-left:1px;padding-right:1px}.teamActivity{max-width:110px}}@media(min-width:700px){.app{margin:12px auto;border-radius:22px;min-height:calc(100vh - 24px)}}
-</style>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="Consulta e acompanhamento da programação operacional STC"
+  >
+
+  <meta name="theme-color" content="#00A651">
+
+  <title>Programação STC</title>
+
+  <!-- Firebase -->
+  https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.jsscript>
+  https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.jsscript>
+  https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.jsscript>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAgFRfZanBfDCK79eWEMWONEg-oppkB2as",
+      authDomain: "programacao-stc.firebaseapp.com",
+      projectId: "programacao-stc",
+      storageBucket: "programacao-stc.firebasestorage.app",
+      messagingSenderId: "557076940494",
+      appId: "1:557076940494:web:366e4432084a50f8aef29f"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const db = firebase.firestore();
+  </script>
+
+  <!--
+    Este arquivo precisa continuar na mesma pasta do HTML.
+    Ele é responsável pela autenticação e pelo perfil do usuário.
+  -->
+  <script src="portal-auth.js"></script>
+
+  <style>
+    /* =========================================================
+       VARIÁVEIS DO PADRÃO VISUAL
+       ========================================================= */
+
+    :root {
+      --verde-principal: #00a651;
+      --verde-escuro: #006b3c;
+      --verde-profundo: #123f35;
+      --verde-suave: #eaf7f0;
+      --verde-borda: #b9ddc9;
+
+      --azul-petroleo: #17343d;
+      --azul-claro: #22a9d6;
+      --azul-suave: #e7f6fb;
+
+      --laranja: #f5a623;
+      --laranja-escuro: #986000;
+      --laranja-suave: #fff3df;
+
+      --vermelho: #c73b3b;
+      --vermelho-suave: #fbeaea;
+
+      --branco: #ffffff;
+      --fundo-pagina: #f5f7f7;
+      --fundo-secundario: #f0f5f3;
+
+      --texto-principal: #17343d;
+      --texto-secundario: #5e6e72;
+      --texto-discreto: #7c898c;
+
+      --borda: #d7dfdd;
+      --borda-suave: #e5ebe9;
+
+      --sombra-card: 0 2px 8px rgba(23, 52, 61, 0.06);
+      --sombra-card-hover: 0 7px 18px rgba(23, 52, 61, 0.1);
+      --sombra-modal: 0 12px 35px rgba(23, 52, 61, 0.2);
+
+      --raio-pequeno: 6px;
+      --raio-padrao: 8px;
+      --raio-grande: 10px;
+
+      --espaco-lateral: 20px;
+      --largura-aplicacao: 560px;
+
+      --transicao: 180ms ease;
+    }
+
+    /* =========================================================
+       CONFIGURAÇÕES GERAIS
+       ========================================================= */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background: var(--fundo-pagina);
+      color: var(--texto-principal);
+      font-family:
+        "Segoe UI",
+        Inter,
+        Arial,
+        Helvetica,
+        sans-serif;
+      line-height: 1.5;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10000;
+      width: 100%;
+      height: 7px;
+      background: var(--verde-principal);
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    [role="button"\]:focus-visible {
+      outline: 3px solid rgba(34, 169, 214, 0.4);
+      outline-offset: 3px;
+    }
+
+    button:disabled {
+      cursor: wait;
+    }
+
+    strong {
+      font-weight: 750;
+    }
+
+    /* =========================================================
+       ESTRUTURA PRINCIPAL
+       ========================================================= */
+
+    .app {
+      width: 100%;
+      max-width: var(--largura-aplicacao);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding-top: 7px;
+      overflow: hidden;
+      background: var(--fundo-pagina);
+    }
+
+    .viewSection {
+      min-height: 100vh;
+    }
+
+    /* =========================================================
+       CABEÇALHOS
+       ========================================================= */
+
+    .topbar,
+    .detailHead {
+      position: relative;
+      min-height: 118px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 28px var(--espaco-lateral) 24px;
+      background: var(--branco);
+      border-bottom: 1px solid var(--borda-suave);
+      color: var(--texto-principal);
+    }
+
+    .topbar::before,
+    .detailHead::before {
+      content: "PORTAL STC";
+      position: absolute;
+      top: 20px;
+      left: var(--espaco-lateral);
+      color: var(--verde-principal);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.8px;
+    }
+
+    .headText {
+      position: relative;
+      z-index: 2;
+      min-width: 0;
+      flex: 1;
+      padding-top: 15px;
+      text-align: left;
+    }
+
+    .headTitle,
+    .detailTitle {
+      min-width: 0;
+      margin: 0;
+      overflow: hidden;
+      color: var(--azul-petroleo);
+      font-size: 26px;
+      font-weight: 750;
+      line-height: 1.12;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .detailTitle {
+      flex: 1;
+      padding-top: 15px;
+    }
+
+    .headSub {
+      display: block;
+      margin: 8px 0 0;
+      color: var(--texto-secundario);
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* =========================================================
+       BOTÕES DO CABEÇALHO
+       ========================================================= */
+
+    .portalBtn,
+    .backBtn {
+      position: relative;
+      z-index: 4;
+      min-width: 78px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      flex-shrink: 0;
+      padding: 9px 13px;
+      background: var(--branco);
+      border: 2px solid var(--verde-principal);
+      border-radius: var(--raio-padrao);
+      color: var(--verde-escuro);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 750;
+      cursor: pointer;
+      transition:
+        background-color var(--transicao),
+        color var(--transicao),
+        border-color var(--transicao);
+    }
+
+    .portalBtn:hover,
+    .backBtn:hover {
+      background: var(--verde-suave);
+      border-color: var(--verde-escuro);
+    }
+
+    .homeIcon,
+    .backIcon {
+      width: 19px;
+      height: 19px;
+      display: block;
+      flex-shrink: 0;
+      fill: currentColor;
+    }
+
+    /* =========================================================
+       CARREGAMENTO E ESTADOS VAZIOS
+       ========================================================= */
+
+    .loading,
+    .empty {
+      margin: 20px var(--espaco-lateral);
+      padding: 30px 20px;
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: var(--raio-padrao);
+      color: var(--texto-secundario);
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: var(--sombra-card);
+    }
+
+    .empty {
+      display: none;
+    }
+
+    .loadingIndicator {
+      width: 34px;
+      height: 34px;
+      margin: 0 auto 14px;
+      border: 4px solid var(--verde-suave);
+      border-top-color: var(--verde-principal);
+      border-radius: 50%;
+      animation: girar 0.8s linear infinite;
+    }
+
+    @keyframes girar {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* =========================================================
+       RESUMO DAS EQUIPES
+       ========================================================= */
+
+    .summaryWrap {
+      padding: 18px var(--espaco-lateral) 12px;
+    }
+
+    .teamCard {
+      position: relative;
+      overflow: hidden;
+      margin: 0 0 16px;
+      padding: 22px 20px 18px;
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: var(--raio-padrao);
+      box-shadow: var(--sombra-card);
+      cursor: pointer;
+      transition:
+        border-color var(--transicao),
+        box-shadow var(--transicao),
+        transform var(--transicao);
+    }
+
+    .teamCard::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--verde-principal);
+    }
+
+    .teamCard:hover {
+      transform: translateY(-2px);
+      border-color: var(--verde-borda);
+      box-shadow: var(--sombra-card-hover);
+    }
+
+    .teamTop {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .teamName {
+      min-width: 0;
+      overflow: hidden;
+      color: var(--azul-petroleo);
+      font-size: 19px;
+      font-weight: 750;
+      line-height: 1.25;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .teamActivity {
+      max-width: 190px;
+      overflow: hidden;
+      color: var(--verde-escuro);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.3;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       INDICADORES DAS EQUIPES
+       ========================================================= */
+
+    .teamStats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .statBox {
+      min-width: 0;
+      padding: 12px 4px 10px;
+      background: var(--verde-suave);
+      border: 1px solid transparent;
+      border-radius: var(--raio-padrao);
+      color: var(--verde-escuro);
+      text-align: center;
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .statBox span {
+      display: block;
+      margin-top: 7px;
+      overflow: hidden;
+      color: var(--texto-secundario);
+      font-size: 9px;
+      font-weight: 600;
+      line-height: 1.15;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .statBox.venc {
+      background: var(--laranja-suave);
+      border-color: #f2d19a;
+      color: var(--laranja-escuro);
+    }
+
+    .teamFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--borda-suave);
+    }
+
+    .teamTotal {
+      flex-shrink: 0;
+      color: var(--verde-escuro);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .teamMembers {
+      max-width: 290px;
+      overflow: hidden;
+      color: var(--texto-secundario);
+      font-size: 12px;
+      line-height: 1.35;
+      text-align: right;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* =========================================================
+       BLOCO DE ORIENTAÇÃO
+       ========================================================= */
+
+    .callbackNotice {
+      position: relative;
+      margin: 8px var(--espaco-lateral) 28px;
+      padding: 24px 22px;
+      overflow: hidden;
+      background: var(--verde-profundo);
+      border-radius: var(--raio-padrao);
+      color: var(--branco);
+    }
+
+    .callbackNotice::before {
+      content: "ORIENTAÇÃO PARA O ATENDIMENTO";
+      display: block;
+      margin-bottom: 12px;
+      color: #8edeb1;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+    }
+
+    .callbackNotice h2 {
+      margin: 0 0 10px;
+      color: var(--branco);
+      font-size: 18px;
+      font-weight: 750;
+      line-height: 1.3;
+    }
+
+    .callbackNotice p {
+      margin: 0 0 16px;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .callbackNotice h3 {
+      margin: 0 0 10px;
+      color: var(--branco);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .callbackList {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .callbackList li {
+      position: relative;
+      margin: 9px 0;
+      padding-left: 23px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .callbackList li::before {
+      content: "✓";
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #8edeb1;
+      font-weight: 900;
+    }
+
+    .callbackNotice .callbackFooter {
+      margin: 17px 0 0;
+      padding-top: 15px;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      color: var(--branco);
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    /* =========================================================
+       DETALHES DA EQUIPE
+       ========================================================= */
+
+    .teamLine {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 18px var(--espaco-lateral) 6px;
+    }
+
+    .teamLine span {
+      min-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 12px;
+      background: var(--verde-suave);
+      border: 1px solid var(--verde-borda);
+      border-radius: 16px;
+      color: var(--verde-escuro);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .cardsWrap {
+      padding: 10px var(--espaco-lateral) 24px;
+    }
+
+    /* =========================================================
+       CARDS DAS NOTAS
+       ========================================================= */
+
+    .card {
+      position: relative;
+      margin: 0 0 16px;
+      padding: 22px 20px 18px;
+      overflow: hidden;
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: var(--raio-padrao);
+      box-shadow: var(--sombra-card);
+      font-size: 14px;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--azul-claro);
+    }
+
+    .nota {
+      color: var(--azul-petroleo);
+      font-size: 19px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .servico {
+      margin-top: 4px;
+      color: var(--texto-secundario);
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .cidade {
+      margin-top: 18px;
+      color: var(--texto-principal);
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .rua {
+      margin-top: 4px;
+      color: var(--texto-secundario);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* =========================================================
+       ETIQUETAS
+       ========================================================= */
+
+    .pillRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      padding: 7px 10px;
+      background: var(--azul-suave);
+      border: 1px solid #bee4f0;
+      border-radius: var(--raio-pequeno);
+      color: #126f8d;
+      font-size: 12px;
+      font-weight: 650;
+      line-height: 1.25;
+    }
+
+    .pill.md,
+    .pill.cargaAlta {
+      background: var(--vermelho-suave);
+      border-color: #e9b9b9;
+      color: var(--vermelho);
+      font-weight: 750;
+    }
+
+    .medidor {
+      margin-top: 17px;
+      padding-top: 15px;
+      border-top: 1px solid var(--borda-suave);
+      color: var(--texto-principal);
+      font-size: 12px;
+      font-weight: 750;
+      line-height: 1.45;
+      text-transform: uppercase;
+    }
+
+    /* =========================================================
+       STATUS DE VENCIMENTO
+       ========================================================= */
+
+    .dateStatus {
+      margin-top: 13px;
+      padding: 10px 12px;
+      border: 1px solid transparent;
+      border-radius: var(--raio-pequeno);
+      text-align: left;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .dateStatus.due {
+      background: var(--vermelho-suave);
+      border-color: #eabcbc;
+      color: var(--vermelho);
+    }
+
+    .dateStatus.next {
+      background: var(--laranja-suave);
+      border-color: #f2d19a;
+      color: var(--laranja-escuro);
+    }
+
+    .dateStatus.normal {
+      background: var(--verde-suave);
+      border-color: var(--verde-borda);
+      color: var(--verde-escuro);
+    }
+
+    /* =========================================================
+       BOTÕES DOS CARDS
+       ========================================================= */
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 10px 12px;
+      border-radius: var(--raio-padrao);
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      transition:
+        background-color var(--transicao),
+        border-color var(--transicao),
+        color var(--transicao);
+    }
+
+    .btn.ghost {
+      background: var(--branco);
+      border: 2px solid var(--verde-principal);
+      color: var(--verde-escuro);
+    }
+
+    .btn.ghost:hover {
+      background: var(--verde-suave);
+      border-color: var(--verde-escuro);
+    }
+
+    .btn.ok {
+      background: var(--verde-principal);
+      border: 2px solid var(--verde-principal);
+      color: var(--branco);
+    }
+
+    .btn.ok:hover {
+      background: var(--verde-escuro);
+      border-color: var(--verde-escuro);
+    }
+
+    .btn:disabled {
+      background: #d9e1de;
+      border-color: #d9e1de;
+      color: var(--texto-discreto);
+      opacity: 1;
+    }
+
+    /* =========================================================
+       MODAIS
+       ========================================================= */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 11000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background: rgba(17, 47, 39, 0.68);
+    }
+
+    .modal-content {
+      width: 100%;
+      max-width: 470px;
+      max-height: 84vh;
+      overflow: auto;
+      padding: 26px 24px 22px;
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-radius: var(--raio-grande);
+      box-shadow: var(--sombra-modal);
+    }
+
+    .modal h2,
+    .modal h3 {
+      margin: 0 0 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--borda-suave);
+      color: var(--azul-petroleo);
+      font-size: 21px;
+      font-weight: 750;
+      line-height: 1.3;
+    }
+
+    .modal p {
+      display: grid;
+      grid-template-columns: minmax(110px, 0.8fr) minmax(0, 1.2fr);
+      gap: 10px;
+      margin: 0;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--borda-suave);
+      color: var(--texto-secundario);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .modal p b {
+      color: var(--texto-principal);
+      font-weight: 700;
+    }
+
+    .confirmText {
+      display: block !important;
+      border-bottom: 0 !important;
+      color: var(--texto-secundario) !important;
+      font-size: 14px !important;
+    }
+
+    .confirmHighlight {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      background: var(--verde-suave);
+      border: 1px solid var(--verde-borda);
+      border-radius: var(--raio-padrao);
+      color: var(--verde-escuro);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .modalActions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      margin-top: 20px;
+    }
+
+    .modalClose,
+    .modalCancel,
+    .modalConfirm {
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: var(--raio-padrao);
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .modalClose,
+    .modalConfirm {
+      background: var(--verde-principal);
+      border: 2px solid var(--verde-principal);
+      color: var(--branco);
+    }
+
+    .modalClose {
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .modalClose:hover,
+    .modalConfirm:hover {
+      background: var(--verde-escuro);
+      border-color: var(--verde-escuro);
+    }
+
+    .modalCancel {
+      background: var(--branco);
+      border: 2px solid var(--borda);
+      color: var(--texto-principal);
+    }
+
+    .modalCancel:hover {
+      background: var(--fundo-secundario);
+      border-color: var(--texto-discreto);
+    }
+
+    /* =========================================================
+       MENSAGENS TEMPORÁRIAS
+       ========================================================= */
+
+    .toastArea {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      z-index: 12000;
+      width: calc(100% - 32px);
+      max-width: 500px;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .toast {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding: 14px 16px;
+      background: var(--branco);
+      border: 1px solid var(--borda);
+      border-left: 4px solid var(--verde-principal);
+      border-radius: var(--raio-padrao);
+      box-shadow: 0 8px 25px rgba(23, 52, 61, 0.16);
+      color: var(--texto-principal);
+      font-size: 13px;
+      line-height: 1.45;
+      pointer-events: auto;
+      animation: mostrarToast 180ms ease;
+    }
+
+    .toast.error {
+      border-left-color: var(--vermelho);
+    }
+
+    .toast.warning {
+      border-left-color: var(--laranja);
+    }
+
+    .toastIcon {
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: var(--verde-suave);
+      border-radius: 50%;
+      color: var(--verde-escuro);
+      font-weight: 900;
+    }
+
+    .toast.error .toastIcon {
+      background: var(--vermelho-suave);
+      color: var(--vermelho);
+    }
+
+    .toast.warning .toastIcon {
+      background: var(--laranja-suave);
+      color: var(--laranja-escuro);
+    }
+
+    @keyframes mostrarToast {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* =========================================================
+       AUTENTICAÇÃO
+       ========================================================= */
+
+    body.auth-pending .app {
+      visibility: hidden;
+    }
+
+    .authLogout {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 9000;
+      min-height: 42px;
+      padding: 9px 16px;
+      background: var(--branco);
+      border: 2px solid var(--verde-principal);
+      border-radius: var(--raio-padrao);
+      color: var(--verde-escuro);
+      font-size: 13px;
+      font-weight: 750;
+      cursor: pointer;
+      box-shadow: var(--sombra-card);
+    }
+
+    .authLogout:hover {
+      background: var(--verde-suave);
+    }
+
+    /* =========================================================
+       RESPONSIVIDADE
+       ========================================================= */
+
+    @media (max-width: 430px) {
+      :root {
+        --espaco-lateral: 16px;
+      }
+
+      .app {
+        max-width: 100%;
+      }
+
+      .topbar,
+      .detailHead {
+        min-height: 112px;
+        gap: 10px;
+        padding-top: 27px;
+      }
+
+      .headTitle,
+      .detailTitle {
+        font-size: 22px;
+      }
+
+      .headSub {
+        font-size: 11px;
+      }
+
+      .portalBtn,
+      .backBtn {
+        min-width: 68px;
+        padding: 8px 10px;
+      }
+
+      .teamCard,
+      .card {
+        padding-right: 16px;
+        padding-left: 16px;
+      }
+
+      .teamName {
+        font-size: 17px;
+      }
+
+      .teamActivity {
+        max-width: 135px;
+        font-size: 12px;
+      }
+
+      .statBox {
+        padding-right: 2px;
+        padding-left: 2px;
+        font-size: 17px;
+      }
+
+      .statBox span {
+        font-size: 8px;
+      }
+
+      .teamMembers {
+        max-width: 185px;
+      }
+
+      .modal p {
+        grid-template-columns: 1fr;
+        gap: 3px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .headTitle,
+      .detailTitle {
+        font-size: 19px;
+      }
+
+      .portalBtn,
+      .backBtn {
+        min-width: 60px;
+        padding-right: 8px;
+        padding-left: 8px;
+        font-size: 11px;
+      }
+
+      .homeIcon,
+      .backIcon {
+        width: 17px;
+        height: 17px;
+      }
+
+      .teamStats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .statBox span {
+        font-size: 10px;
+      }
+
+      .teamActivity {
+        max-width: 105px;
+      }
+
+      .actions,
+      .modalActions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (min-width: 700px) {
+      body {
+        padding: 20px;
+      }
+
+      body::before {
+        position: absolute;
+      }
+
+      .app {
+        min-height: calc(100vh - 40px);
+        padding-top: 0;
+        border: 1px solid var(--borda);
+        border-radius: var(--raio-grande);
+        box-shadow: 0 8px 30px rgba(23, 52, 61, 0.08);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
 </head>
-<body class='auth-pending'>
-<button id='authLogout' class='authLogout' type='button'>Sair</button>
-<div class='app'>
-<section id='viewResumo'>
-<div class='topbar'><div class='headText'><div class='headTitle'>PROGRAMAÇÃO STC</div><div class='headSub' id='dataHoraAtual'>Carregando atualização...</div></div>
-<a class='portalBtn' href='index.html' aria-label='Voltar ao Portal'><svg class='homeIcon' viewBox='0 0 24 24'><path d='M12 2.5L2.5 10.4V21h6.2v-6.3h6.6V21h6.2V10.4z'></path></svg><span>Voltar</span></a></div>
-<div id='loading' class='loading'>Carregando programação...</div><div id='summaryWrap' class='summaryWrap'></div><div id='emptyResumo' class='empty'>Nenhuma nota aberta encontrada.</div>
-<aside class='callbackNotice' aria-labelledby='callbackTitle'>
-<h2 id='callbackTitle'>Antes de sair para o atendimento</h2>
-<p>Os indicadores acima mostram a quantidade e o perfil das notas programadas para hoje. Confiram os medidores e separem os materiais necessários antes de sair.</p>
-<h3>No contato com o cliente, confirmem:</h3>
-<ul class='callbackList'>
-<li>Nome completo e endereço: rua, número, bairro e cidade.</li>
-<li>Serviço solicitado e se corresponde ao que está descrito na nota.</li>
-<li>Período combinado e se haverá alguém no local para acompanhar a equipe.</li>
-<li>Tensão e carga previstas para a instalação.</li>
-<li>Se o padrão de entrada está concluído, acessível e sem pendências que impeçam o serviço.</li>
-<li>Se há dificuldade de acesso, como portão trancado ou animal solto.</li>
-<li>Se possível, peçam fotos da frente do imóvel, do padrão de entrada e do local de instalação.</li>
-</ul>
-<p class='callbackFooter'>Se encontrarem divergência ou algum impedimento, avisem o BackOffice antes do deslocamento.</p>
-</aside>
-</section>
-<section id='viewDetalhe' style='display:none'><div class='detailHead'><div class='detailTitle' id='equipeSelecionada'></div><button type='button' class='backBtn' onclick='voltarResumo()'><svg class='homeIcon' viewBox='0 0 24 24'><path d='M12 2.5L2.5 10.4V21h6.2v-6.3h6.6V21h6.2V10.4z'></path></svg><span>Voltar</span></button></div><div class='teamLine'><span id='qtdEquipe'></span></div><div id='cards' class='cardsWrap'></div><div id='emptyEquipe' class='empty'>Nenhuma nota aberta para esta equipe.</div></section>
-<script>
-var allData=[];var equipeAtual='';var activeProfile=null;
-function norm(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\s+/g,' ').trim().toUpperCase();}
-function esc(v){return String(v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
-function somenteDataBR(s){s=String(s||'').trim();var m=s.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);if(!m)return '';return String(m[1]).padStart(2,'0')+'/'+String(m[2]).padStart(2,'0')+'/'+m[3];}
-function dateInfo(s){s=somenteDataBR(s);if(!s)return{ord:99999,cls:'normal',label:'Sem data'};var p=s.split('/');var d=new Date(+p[2],+p[1]-1,+p[0]);var h=new Date();h.setHours(0,0,0,0);d.setHours(0,0,0,0);var diff=Math.round((d-h)/86400000);if(diff===0)return{ord:0,cls:'due',label:'Hoje - '+s};if(diff===1)return{ord:1,cls:'next',label:'Amanhã - '+s};return{ord:diff<0?2:diff+10,cls:'normal',label:s};}
-function abertas(){return allData.filter(function(x){return norm(x.status)!=='CONCLUIDO';});}
-PortalAuth.requireProfile().then(function(profile){activeProfile=profile;document.body.classList.remove('auth-pending');var query=db.collection('programacao_stc').where('status','==','aberto').where('utd','==',profile.utd);if(profile.perfil==='ELETRICISTA')query=query.where('equipe','==',profile.viatura);query.onSnapshot(function(snapshot){allData=[];snapshot.forEach(function(doc){var x=doc.data();x.nota=x.nota||doc.id;x.docId=doc.id;allData.push(x);});document.getElementById('loading').style.display='none';atualizarCabecalho();renderResumo();if(equipeAtual)renderEquipe(equipeAtual);},function(err){console.error(err);document.getElementById('loading').textContent='Não foi possível carregar os dados autorizados.';});}).catch(function(err){console.error(err);});
-document.getElementById('authLogout').addEventListener('click',PortalAuth.signOut);
-function atualizarCabecalho(){var txt='';allData.some(function(x){if(x.atualizacaoCarteira){txt=x.atualizacaoCarteira;return true;}return false;});document.getElementById('dataHoraAtual').textContent=txt?'Última atualização: '+txt:'Programação sem registros';}
-function renderResumo(){var wrap=document.getElementById('summaryWrap');var vazia=document.getElementById('emptyResumo');var lista=abertas();var mapa={};
-lista.forEach(function(x){var eq=String(x.equipe||'').trim();if(!eq)return;if(!mapa[eq])mapa[eq]={equipe:eq,atividade:x.atividade||'',membro1:x.membro1||'',membro2:x.membro2||'',total:0,venc:0,trif:0,mono:0,md:0};
-var g=mapa[eq];g.total++;if(dateInfo(x.venc).ord===0)g.venc++;if(norm(x.para)==='TRIF')g.trif++;if(norm(x.para)==='MONO')g.mono++;if(String(x.md200a||'0')==='1')g.md++;
-if(!g.atividade&&x.atividade)g.atividade=x.atividade;if(!g.membro1&&x.membro1)g.membro1=x.membro1;if(!g.membro2&&x.membro2)g.membro2=x.membro2;});
-var equipes=Object.keys(mapa).sort(function(a,b){return a.localeCompare(b,'pt-BR');});var out='';equipes.forEach(function(eq){var g=mapa[eq];var membros=[g.membro1,g.membro2].filter(Boolean).join(' / ');
-out+=`<div class='teamCard' data-equipe='${esc(eq)}'><div class='teamTop'><div class='teamName'>${esc(eq)}</div><div class='teamActivity'>${esc(g.atividade)}</div></div><div class='teamStats'>`;
-out+=`<div class='statBox venc'>${g.venc}<span>Venc/dia</span></div><div class='statBox'>${g.trif}<span>Trif</span></div><div class='statBox'>${g.mono}<span>Mono</span></div><div class='statBox'>${g.md}<span>200A</span></div></div>`;
-out+=`<div class='teamFooter'><div class='teamTotal'>${g.total} notas</div><div class='teamMembers'>${esc(membros)}</div></div></div>`;});wrap.innerHTML=out;vazia.style.display=equipes.length?'none':'block';
-wrap.querySelectorAll('.teamCard').forEach(function(card){card.onclick=function(){abrirEquipe(card.dataset.equipe);};});}
-function abrirEquipe(eq){equipeAtual=eq;document.getElementById('viewResumo').style.display='none';document.getElementById('viewDetalhe').style.display='block';renderEquipe(eq);window.scrollTo(0,0);}
-function voltarResumo(){equipeAtual='';document.getElementById('viewDetalhe').style.display='none';document.getElementById('viewResumo').style.display='block';renderResumo();window.scrollTo(0,0);}
-function renderEquipe(eq){var lista=abertas().filter(function(x){return String(x.equipe||'')===eq;});lista.sort(function(a,b){return dateInfo(a.venc).ord-dateInfo(b.venc).ord;});
-document.getElementById('equipeSelecionada').textContent=eq;document.getElementById('qtdEquipe').textContent=lista.length+' notas';var cards=document.getElementById('cards');var vazio=document.getElementById('emptyEquipe');var out='';
-lista.forEach(function(it){var dt=dateInfo(it.venc);var cargaNum=parseFloat(String(it.carga||'0').replace(',','.'));var classeCarga=cargaNum>=66.1?' cargaAlta':'';
-out+=`<div class='card' data-docid='${esc(it.docId)}'><div class='nota'>${esc(it.nota||'—')}</div><div class='servico'>${esc(it.tipo||'')}</div><div class='cidade'><b>${esc(it.cidade||'')}</b> • ${esc(it.bairro||'')}</div><div class='rua'>${esc(it.rua||'')}</div>`;
-out+=`<div class='pillRow'><div class='pill'>${esc(it.de||'')} &gt; ${esc(it.para||'')}</div><div class='pill${classeCarga}'>Carga: ${esc(it.carga||'—')}</div>${String(it.md200a||'0')==='1'?`<div class='pill md'>MD 200A</div>`:''}</div>`;
-out+=`<div class='medidor'>MEDIDOR A SER UTILIZADO: ${esc(it.medidorUso||'—')}</div><div class='dateStatus ${dt.cls}'>${esc(dt.label)}</div><div class='actions'><button class='btn ghost' type='button'>Detalhes</button><button class='btn ok' type='button'>Concluído</button></div></div>`;});
-cards.innerHTML=out;vazio.style.display=lista.length?'none':'block';cards.querySelectorAll('.card').forEach(function(card){var it=lista.find(function(x){return x.docId===card.dataset.docid;});card.querySelector('.ghost').onclick=function(){showModal(it);};card.querySelector('.ok').onclick=function(){concluirNota(it,this);};});}
-function concluirNota(it,btn){if(!it||!confirm('Marcar a nota '+it.nota+' como concluída?'))return;btn.disabled=true;btn.textContent='Salvando...';db.collection('programacao_stc').doc(String(it.docId)).set({status:'concluido',concluidoPor:String(activeProfile&& (activeProfile.viatura||activeProfile.login)||''),concluidoEm:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(function(err){console.error(err);alert('Erro ao salvar. Verifique a internet e tente novamente.');btn.disabled=false;btn.textContent='Concluído';});}
-function showModal(it){if(!it)return;var m=document.createElement('div');m.className='modal';var c=document.createElement('div');c.className='modal-content';var h=`<h3>Nota ${esc(it.nota||'')}</h3>`;function add(l,v){if(v)h+=`<p><b>${esc(l)}: </b>${esc(v)}</p>`;}add('Equipe',it.equipe);add('Atividade',it.atividade);add('Tipo de Serviço',it.tipo);add('Data de Vencimento',it.venc);add('Cidade',it.cidade);add('Bairro',it.bairro);add('Rua',it.rua);add('Carga',it.carga);add('MEDIDOR A SER UTILIZADO',it.medidorUso);add('De',it.de);add('Para',it.para);add('Cabo Cliente',it.caboCliente);add('Cabo Cosern',it.caboCosern);add('Disjuntor',it.disjuntor);add('Medidor atual',it.medidorAtual);if(String(it.md200a||'0')==='1')add('MD200A','Sim');h+=`<button class='modalClose'>Fechar</button>`;c.innerHTML=h;m.appendChild(c);document.body.appendChild(m);c.querySelector('.modalClose').onclick=function(){m.remove();};m.onclick=function(e){if(e.target===m)m.remove();};}
-</script>
-</div>
+
+<body class="auth-pending">
+
+  <!-- Área para mensagens de sucesso e erro -->
+  <div
+    id="toastArea"
+    class="toastArea"
+    aria-live="polite"
+    aria-atomic="true"
+  ></div>
+
+  <button
+    id="authLogout"
+    class="authLogout"
+    type="button"
+    aria-label="Sair da aplicação"
+  >
+    Sair
+  </button>
+
+  <main class="app">
+
+    <!-- =======================================================
+         TELA DE RESUMO
+         ======================================================= -->
+
+    <section
+      id="viewResumo"
+      class="viewSection"
+      aria-labelledby="tituloPrincipal"
+    >
+      <header class="topbar">
+        <div class="headText">
+          <h1 id="tituloPrincipal" class="headTitle">
+            Programação STC
+          </h1>
+
+          <p
+            class="headSub"
+            id="dataHoraAtual"
+            aria-live="polite"
+          >
+            Carregando atualização...
+          </p>
+        </div>
+
+        <a
+          class="portalBtn"
+          href="index.html"
+          aria-label="Voltar ao Portal STC"
+        >
+          <svg
+            class="homeIcon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path d="M12 2.5L2.5 10.4V21h6.2v-6.3h6.6V21h6.2V10.4z"></path>
+          </svg>
+
+          <span>Portal</span>
+        </a>
+      </header>
+
+      <div
+        id="loading"
+        class="loading"
+        role="status"
+        aria-live="polite"
+      >
+        <div class="loadingIndicator" aria-hidden="true"></div>
+        Carregando programação...
+      </div>
+
+      <div
+        id="summaryWrap"
+        class="summaryWrap"
+        aria-live="polite"
+      ></div>
+
+      <div
+        id="emptyResumo"
+        class="empty"
+        role="status"
+        aria-live="polite"
+      >
+        <strong>Nenhuma nota aberta encontrada</strong>
+        <br>
+        Não existem notas disponíveis para o perfil atual.
+      </div>
+
+      <aside
+        class="callbackNotice"
+        aria-labelledby="callbackTitle"
+      >
+        <h2 id="callbackTitle">
+          Antes de sair para o atendimento
+        </h2>
+
+        <p>
+          Os indicadores acima mostram a quantidade e o perfil das
+          notas programadas. Confiram os medidores e separem os
+          materiais necessários antes de sair.
+        </p>
+
+        <h3>
+          No contato com o cliente, confirmem:
+        </h3>
+
+        <ul class="callbackList">
+          <li>
+            Nome completo e endereço: rua, número, bairro e cidade.
+          </li>
+
+          <li>
+            Serviço solicitado e se corresponde ao que está descrito
+            na nota.
+          </li>
+
+          <li>
+            Período combinado e se haverá alguém no local para
+            acompanhar a equipe.
+          </li>
+
+          <li>
+            Tensão e carga previstas para a instalação.
+          </li>
+
+          <li>
+            Se o padrão de entrada está concluído, acessível e sem
+            pendências que impeçam o serviço.
+          </li>
+
+          <li>
+            Se há dificuldade de acesso, como portão trancado ou
+            animal solto.
+          </li>
+
+          <li>
+            Se possível, peçam fotos da frente do imóvel, do padrão
+            de entrada e do local de instalação.
+          </li>
+        </ul>
+
+        <p class="callbackFooter">
+          Se encontrarem divergência ou algum impedimento, avisem o
+          BackOffice antes do deslocamento.
+        </p>
+      </aside>
+    </section>
+
+    <!-- =======================================================
+         TELA DE DETALHES DA EQUIPE
+         ======================================================= -->
+
+    <section
+      id="viewDetalhe"
+      class="viewSection"
+      style="display: none;"
+      aria-labelledby="equipeSelecionada"
+    >
+      <header class="detailHead">
+        <h1
+          class="detailTitle"
+          id="equipeSelecionada"
+        >
+          Equipe
+        </h1>
+
+        <button
+          type="button"
+          class="backBtn"
+          id="btnVoltarResumo"
+          aria-label="Voltar para o resumo das equipes"
+        >
+          <svg
+            class="backIcon"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.42-1.41L7.83 13H20z"></path>
+          </svg>
+
+          <span>Voltar</span>
+        </button>
+      </header>
+
+      <div class="teamLine">
+        <span id="qtdEquipe">
+          0 notas
+        </span>
+      </div>
+
+      <div
+        id="cards"
+        class="cardsWrap"
+        aria-live="polite"
+      ></div>
+
+      <div
+        id="emptyEquipe"
+        class="empty"
+        role="status"
+        aria-live="polite"
+      >
+        <strong>Nenhuma nota disponível</strong>
+        <br>
+        Não existem notas abertas para esta equipe.
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* =========================================================
+       VARIÁVEIS GERAIS
+       ========================================================= */
+
+    var allData = [];
+    var equipeAtual = "";
+    var activeProfile = null;
+    var unsubscribeProgramacao = null;
+
+    /* =========================================================
+       FUNÇÕES AUXILIARES
+       ========================================================= */
+
+    function norm(valor) {
+      return String(valor || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toUpperCase();
+    }
+
+    function esc(valor) {
+      return String(valor || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function somenteDataBR(valor) {
+      var texto = String(valor || "").trim();
+
+      var resultado = texto.match(
+        /(\d{1,2})\/(\d{1,2})\/(\d{4})/
+      );
+
+      if (!resultado) {
+        return "";
+      }
+
+      return (
+        String(resultado[1]).padStart(2, "0") +
+        "/" +
+        String(resultado[2]).padStart(2, "0") +
+        "/" +
+        resultado[3]
+      );
+    }
+
+    function dateInfo(valor) {
+      var dataTexto = somenteDataBR(valor);
+
+      if (!dataTexto) {
+        return {
+          ord: 99999,
+          cls: "normal",
+          label: "Data não informada"
+        };
+      }
+
+      var partes = dataTexto.split("/");
+
+      var dataVencimento = new Date(
+        Number(partes[2]),
+        Number(partes[1]) - 1,
+        Number(partes[0])
+      );
+
+      var hoje = new Date();
+
+      hoje.setHours(0, 0, 0, 0);
+      dataVencimento.setHours(0, 0, 0, 0);
+
+      var diferenca = Math.round(
+        (dataVencimento - hoje) / 86400000
+      );
+
+      if (diferenca < 0) {
+        return {
+          ord: -1000 + diferenca,
+          cls: "due",
+          label: "Vencida em " + dataTexto
+        };
+      }
+
+      if (diferenca === 0) {
+        return {
+          ord: 0,
+          cls: "due",
+          label: "Vence hoje - " + dataTexto
+        };
+      }
+
+      if (diferenca === 1) {
+        return {
+          ord: 1,
+          cls: "next",
+          label: "Vence amanhã - " + dataTexto
+        };
+      }
+
+      return {
+        ord: diferenca + 10,
+        cls: "normal",
+        label: "Vencimento: " + dataTexto
+      };
+    }
+
+    function abertas() {
+      return allData.filter(function(item) {
+        return norm(item.status) !== "CONCLUIDO";
+      });
+    }
+
+    function mostrarMensagem(mensagem, tipo) {
+      var area = document.getElementById("toastArea");
+
+      if (!area) {
+        return;
+      }
+
+      var toast = document.createElement("div");
+      toast.className = "toast " + (tipo || "success");
+      toast.setAttribute("role", "status");
+
+      var icone = "✓";
+
+      if (tipo === "error") {
+        icone = "!";
+      }
+
+      if (tipo === "warning") {
+        icone = "!";
+      }
+
+      toast.innerHTML =
+        '<div class="toastIcon" aria-hidden="true">' +
+          esc(icone) +
+        "</div>" +
+        "<div>" +
+          esc(mensagem) +
+        "</div>";
+
+      area.appendChild(toast);
+
+      window.setTimeout(function() {
+        toast.remove();
+      }, 5000);
+    }
+
+    function bloquearRolagemModal() {
+      document.body.style.overflow = "hidden";
+    }
+
+    function liberarRolagemModal() {
+      document.body.style.overflow = "";
+    }
+
+    function removerModal(modal) {
+      if (modal && modal.parentNode) {
+        modal.remove();
+      }
+
+      liberarRolagemModal();
+    }
+
+    /* =========================================================
+       AUTENTICAÇÃO E CONSULTA DO FIRESTORE
+       ========================================================= */
+
+    PortalAuth.requireProfile()
+      .then(function(profile) {
+        activeProfile = profile;
+
+        document.body.classList.remove("auth-pending");
+
+        var query = db
+          .collection("programacao_stc")
+          .where("status", "==", "aberto")
+          .where("utd", "==", profile.utd);
+
+        if (profile.perfil === "ELETRICISTA") {
+          query = query.where(
+            "equipe",
+            "==",
+            profile.viatura
+          );
+        }
+
+        unsubscribeProgramacao = query.onSnapshot(
+          function(snapshot) {
+            allData = [];
+
+            snapshot.forEach(function(documento) {
+              var item = documento.data();
+
+              item.nota = item.nota || documento.id;
+              item.docId = documento.id;
+
+              allData.push(item);
+            });
+
+            document.getElementById("loading").style.display = "none";
+
+            atualizarCabecalho();
+            renderResumo();
+
+            if (equipeAtual) {
+              renderEquipe(equipeAtual);
+            }
+          },
+          function(erro) {
+            console.error(erro);
+
+            var loading = document.getElementById("loading");
+
+            loading.innerHTML =
+              "<strong>Não foi possível carregar os dados</strong>" +
+              "<br>" +
+              "Verifique sua conexão e tente novamente.";
+
+            mostrarMensagem(
+              "Não foi possível carregar os dados autorizados.",
+              "error"
+            );
+          }
+        );
+      })
+      .catch(function(erro) {
+        console.error(erro);
+
+        document.body.classList.remove("auth-pending");
+
+        var loading = document.getElementById("loading");
+
+        if (loading) {
+          loading.innerHTML =
+            "<strong>Acesso não autorizado</strong>" +
+            "<br>" +
+            "Não foi possível validar o perfil do usuário.";
+        }
+      });
+
+    /* =========================================================
+       EVENTOS FIXOS
+       ========================================================= */
+
+    document
+      .getElementById("authLogout")
+      .addEventListener("click", function() {
+        if (typeof unsubscribeProgramacao === "function") {
+          unsubscribeProgramacao();
+        }
+
+        PortalAuth.signOut();
+      });
+
+    document
+      .getElementById("btnVoltarResumo")
+      .addEventListener("click", voltarResumo);
+
+    /* =========================================================
+       CABEÇALHO
+       ========================================================= */
+
+    function atualizarCabecalho() {
+      var textoAtualizacao = "";
+
+      allData.some(function(item) {
+        if (item.atualizacaoCarteira) {
+          textoAtualizacao = item.atualizacaoCarteira;
+          return true;
+        }
+
+        return false;
+      });
+
+      document.getElementById("dataHoraAtual").textContent =
+        textoAtualizacao
+          ? "Última atualização: " + textoAtualizacao
+          : "Programação sem registros";
+    }
+
+    /* =========================================================
+       RESUMO DAS EQUIPES
+       ========================================================= */
+
+    function renderResumo() {
+      var wrap = document.getElementById("summaryWrap");
+      var vazio = document.getElementById("emptyResumo");
+      var lista = abertas();
+      var mapa = {};
+
+      lista.forEach(function(item) {
+        var equipe = String(item.equipe || "").trim();
+
+        if (!equipe) {
+          return;
+        }
+
+        if (!mapa[equipe]) {
+          mapa[equipe] = {
+            equipe: equipe,
+            atividade: item.atividade || "",
+            membro1: item.membro1 || "",
+            membro2: item.membro2 || "",
+            total: 0,
+            venc: 0,
+            trif: 0,
+            mono: 0,
+            md: 0
+          };
+        }
+
+        var grupo = mapa[equipe];
+
+        grupo.total++;
+
+        var informacaoData = dateInfo(item.venc);
+
+        if (
+          informacaoData.cls === "due" ||
+          informacaoData.ord === 0
+        ) {
+          grupo.venc++;
+        }
+
+        if (norm(item.para) === "TRIF") {
+          grupo.trif++;
+        }
+
+        if (norm(item.para) === "MONO") {
+          grupo.mono++;
+        }
+
+        if (String(item.md200a || "0") === "1") {
+          grupo.md++;
+        }
+
+        if (!grupo.atividade && item.atividade) {
+          grupo.atividade = item.atividade;
+        }
+
+        if (!grupo.membro1 && item.membro1) {
+          grupo.membro1 = item.membro1;
+        }
+
+        if (!grupo.membro2 && item.membro2) {
+          grupo.membro2 = item.membro2;
+        }
+      });
+
+      var equipes = Object.keys(mapa).sort(function(a, b) {
+        return a.localeCompare(b, "pt-BR");
+      });
+
+      var html = "";
+
+      equipes.forEach(function(equipe) {
+        var grupo = mapa[equipe];
+
+        var membros = [
+          grupo.membro1,
+          grupo.membro2
+        ]
+          .filter(Boolean)
+          .join(" / ");
+
+        html +=
+          '<article ' +
+            'class="teamCard" ' +
+            'data-equipe="' + esc(equipe) + '" ' +
+            'tabindex="0" ' +
+            'role="button" ' +
+            'aria-label="Abrir programação da equipe ' +
+              esc(equipe) +
+            '">' +
+
+            '<div class="teamTop">' +
+              '<div class="teamName">' +
+                esc(equipe) +
+              "</div>" +
+
+              '<div class="teamActivity">' +
+                esc(grupo.atividade || "Sem atividade") +
+              "</div>" +
+            "</div>" +
+
+            '<div class="teamStats">' +
+              '<div class="statBox venc">' +
+                grupo.venc +
+                "<span>Vencidas/hoje</span>" +
+              "</div>" +
+
+              '<div class="statBox">' +
+                grupo.trif +
+                "<span>Trifásicas</span>" +
+              "</div>" +
+
+              '<div class="statBox">' +
+                grupo.mono +
+                "<span>Monofásicas</span>" +
+              "</div>" +
+
+              '<div class="statBox">' +
+                grupo.md +
+                "<span>MD 200A</span>" +
+              "</div>" +
+            "</div>" +
+
+            '<div class="teamFooter">' +
+              '<div class="teamTotal">' +
+                grupo.total +
+                (grupo.total === 1 ? " nota" : " notas") +
+              "</div>" +
+
+              '<div class="teamMembers">' +
+                esc(membros || "Equipe sem membros informados") +
+              "</div>" +
+            "</div>" +
+          "</article>";
+      });
+
+      wrap.innerHTML = html;
+      vazio.style.display = equipes.length ? "none" : "block";
+
+      wrap
+        .querySelectorAll(".teamCard")
+        .forEach(function(card) {
+          function abrirCard() {
+            abrirEquipe(card.dataset.equipe);
+          }
+
+          card.addEventListener("click", abrirCard);
+
+          card.addEventListener("keydown", function(evento) {
+            if (
+              evento.key === "Enter" ||
+              evento.key === " "
+            ) {
+              evento.preventDefault();
+              abrirCard();
+            }
+          });
+        });
+    }
+
+    /* =========================================================
+       ABRIR E VOLTAR DA EQUIPE
+       ========================================================= */
+
+    function abrirEquipe(equipe) {
+      equipeAtual = equipe;
+
+      document.getElementById("viewResumo").style.display = "none";
+      document.getElementById("viewDetalhe").style.display = "block";
+
+      renderEquipe(equipe);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function voltarResumo() {
+      equipeAtual = "";
+
+      document.getElementById("viewDetalhe").style.display = "none";
+      document.getElementById("viewResumo").style.display = "block";
+
+      renderResumo();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    /* =========================================================
+       CARDS DAS NOTAS
+       ========================================================= */
+
+    function renderEquipe(equipe) {
+      var lista = abertas().filter(function(item) {
+        return String(item.equipe || "") === equipe;
+      });
+
+      lista.sort(function(a, b) {
+        return dateInfo(a.venc).ord - dateInfo(b.venc).ord;
+      });
+
+      document.getElementById("equipeSelecionada").textContent =
+        equipe;
+
+      document.getElementById("qtdEquipe").textContent =
+        lista.length +
+        (lista.length === 1 ? " nota aberta" : " notas abertas");
+
+      var cards = document.getElementById("cards");
+      var vazio = document.getElementById("emptyEquipe");
+      var html = "";
+
+      lista.forEach(function(item) {
+        var informacaoData = dateInfo(item.venc);
+
+        var cargaNumero = parseFloat(
+          String(item.carga || "0").replace(",", ".")
+        );
+
+        var classeCarga =
+          cargaNumero >= 66.1
+            ? " cargaAlta"
+            : "";
+
+        html +=
+          '<article ' +
+            'class="card" ' +
+            'data-docid="' + esc(item.docId) + '"' +
+          ">" +
+
+            '<div class="nota">' +
+              "Nota " +
+              esc(item.nota || "Não informada") +
+            "</div>" +
+
+            '<div class="servico">' +
+              esc(item.tipo || "Serviço não informado") +
+            "</div>" +
+
+            '<div class="cidade">' +
+              "<strong>" +
+                esc(item.cidade || "Cidade não informada") +
+              "</strong>" +
+
+              (
+                item.bairro
+                  ? " • " + esc(item.bairro)
+                  : ""
+              ) +
+            "</div>" +
+
+            '<div class="rua">' +
+              esc(item.rua || "Endereço não informado") +
+            "</div>" +
+
+            '<div class="pillRow">' +
+
+              '<div class="pill">' +
+                esc(item.de || "Não informado") +
+                " → " +
+                esc(item.para || "Não informado") +
+              "</div>" +
+
+              '<div class="pill' + classeCarga + '">' +
+                "Carga: " +
+                esc(item.carga || "Não informada") +
+              "</div>" +
+
+              (
+                String(item.md200a || "0") === "1"
+                  ? '<div class="pill md">MD 200A</div>'
+                  : ""
+              ) +
+
+            "</div>" +
+
+            '<div class="medidor">' +
+              "Medidor a ser utilizado: " +
+              esc(item.medidorUso || "Não informado") +
+            "</div>" +
+
+            '<div class="dateStatus ' +
+              esc(informacaoData.cls) +
+            '">' +
+              esc(informacaoData.label) +
+            "</div>" +
+
+            '<div class="actions">' +
+
+              '<button ' +
+                'class="btn ghost" ' +
+                'type="button" ' +
+                'data-action="detalhes" ' +
+                'aria-label="Visualizar detalhes da nota ' +
+                  esc(item.nota || "") +
+                '">' +
+                "Ver detalhes" +
+              "</button>" +
+
+              '<button ' +
+                'class="btn ok" ' +
+                'type="button" ' +
+                'data-action="concluir" ' +
+                'aria-label="Marcar a nota ' +
+                  esc(item.nota || "") +
+                  ' como concluída">' +
+                "Concluir nota" +
+              "</button>" +
+
+            "</div>" +
+          "</article>";
+      });
+
+      cards.innerHTML = html;
+      vazio.style.display = lista.length ? "none" : "block";
+
+      cards
+        .querySelectorAll(".card")
+        .forEach(function(card) {
+          var item = lista.find(function(registro) {
+            return registro.docId === card.dataset.docid;
+          });
+
+          var botaoDetalhes = card.querySelector(
+            '[data-action="detalhes"]'
+          );
+
+          var botaoConcluir = card.querySelector(
+            '[data-action="concluir"]'
+          );
+
+          botaoDetalhes.addEventListener(
+            "click",
+            function() {
+              showModal(item);
+            }
+          );
+
+          botaoConcluir.addEventListener(
+            "click",
+            function() {
+              abrirConfirmacaoConclusao(item, botaoConcluir);
+            }
+          );
+        });
+    }
+
+    /* =========================================================
+       MODAL DE CONFIRMAÇÃO
+       ========================================================= */
+
+    function abrirConfirmacaoConclusao(item, botao) {
+      if (!item) {
+        return;
+      }
+
+      var modal = document.createElement("div");
+      modal.className = "modal";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+      modal.setAttribute(
+        "aria-labelledby",
+        "tituloConfirmacao"
+      );
+
+      modal.innerHTML =
+        '<div class="modal-content">' +
+
+          '<h2 id="tituloConfirmacao">' +
+            "Concluir nota" +
+          "</h2>" +
+
+          '<p class="confirmText">' +
+            "Deseja marcar esta nota como concluída? " +
+            "O novo status será atualizado para os demais usuários." +
+          "</p>" +
+
+          '<div class="confirmHighlight">' +
+            "Nota " +
+            esc(item.nota || "não informada") +
+          "</div>" +
+
+          '<div class="modalActions">' +
+
+            '<button ' +
+              'type="button" ' +
+              'class="modalCancel">' +
+              "Cancelar" +
+            "</button>" +
+
+            '<button ' +
+              'type="button" ' +
+              'class="modalConfirm">' +
+              "Confirmar conclusão" +
+            "</button>" +
+
+          "</div>" +
+        "</div>";
+
+      document.body.appendChild(modal);
+      bloquearRolagemModal();
+
+      var botaoCancelar = modal.querySelector(".modalCancel");
+      var botaoConfirmar = modal.querySelector(".modalConfirm");
+
+      botaoCancelar.focus();
+
+      botaoCancelar.addEventListener("click", function() {
+        removerModal(modal);
+      });
+
+      botaoConfirmar.addEventListener("click", function() {
+        removerModal(modal);
+        concluirNota(item, botao);
+      });
+
+      modal.addEventListener("click", function(evento) {
+        if (evento.target === modal) {
+          removerModal(modal);
+        }
+      });
+
+      modal.addEventListener("keydown", function(evento) {
+        if (evento.key === "Escape") {
+          removerModal(modal);
+        }
+      });
+    }
+
+    /* =========================================================
+       CONCLUSÃO DA NOTA
+       ========================================================= */
+
+    function concluirNota(item, botao) {
+      if (!item || !botao) {
+        return;
+      }
+
+      botao.disabled = true;
+      botao.textContent = "Salvando...";
+
+      db
+        .collection("programacao_stc")
+        .doc(String(item.docId))
+        .set(
+          {
+            status: "concluido",
+
+            concluidoPor: String(
+              (
+                activeProfile &&
+                (
+                  activeProfile.viatura ||
+                  activeProfile.login
+                )
+              ) ||
+              ""
+            ),
+
+            concluidoEm:
+              firebase.firestore.FieldValue.serverTimestamp()
+          },
+          {
+            merge: true
+          }
+        )
+        .then(function() {
+          mostrarMensagem(
+            "A nota " +
+            item.nota +
+            " foi concluída com sucesso.",
+            "success"
+          );
+        })
+        .catch(function(erro) {
+          console.error(erro);
+
+          mostrarMensagem(
+            "Não foi possível concluir a nota. Verifique a internet e tente novamente.",
+            "error"
+          );
+
+          botao.disabled = false;
+          botao.textContent = "Concluir nota";
+        });
+    }
+
+    /* =========================================================
+       MODAL DE DETALHES
+       ========================================================= */
+
+    function showModal(item) {
+      if (!item) {
+        return;
+      }
+
+      var modal = document.createElement("div");
+      modal.className = "modal";
+      modal.setAttribute("role", "dialog");
+      modal.setAttribute("aria-modal", "true");
+      modal.setAttribute(
+        "aria-labelledby",
+        "tituloDetalhesNota"
+      );
+
+      var conteudo = document.createElement("div");
+      conteudo.className = "modal-content";
+
+      var html =
+        '<h2 id="tituloDetalhesNota">' +
+          "Nota " +
+          esc(item.nota || "não informada") +
+        "</h2>";
+
+      function adicionarCampo(rotulo, valor) {
+        if (
+          valor !== undefined &&
+          valor !== null &&
+          String(valor).trim() !== ""
+        ) {
+          html +=
+            "<p>" +
+              "<b>" +
+                esc(rotulo) +
+              ":</b>" +
+              "<span>" +
+                esc(valor) +
+              "</span>" +
+            "</p>";
+        }
+      }
+
+      adicionarCampo("Equipe", item.equipe);
+      adicionarCampo("Atividade", item.atividade);
+      adicionarCampo("Tipo de serviço", item.tipo);
+      adicionarCampo("Data de vencimento", item.venc);
+      adicionarCampo("Cidade", item.cidade);
+      adicionarCampo("Bairro", item.bairro);
+      adicionarCampo("Rua", item.rua);
+      adicionarCampo("Carga", item.carga);
+
+      adicionarCampo(
+        "Medidor a ser utilizado",
+        item.medidorUso
+      );
+
+      adicionarCampo("De", item.de);
+      adicionarCampo("Para", item.para);
+      adicionarCampo("Cabo do cliente", item.caboCliente);
+      adicionarCampo("Cabo Cosern", item.caboCosern);
+      adicionarCampo("Disjuntor", item.disjuntor);
+      adicionarCampo("Medidor atual", item.medidorAtual);
+
+      if (String(item.md200a || "0") === "1") {
+        adicionarCampo("MD 200A", "Sim");
+      }
+
+      html +=
+        '<button ' +
+          'type="button" ' +
+          'class="modalClose">' +
+          "Fechar" +
+        "</button>";
+
+      conteudo.innerHTML = html;
+      modal.appendChild(conteudo);
+      document.body.appendChild(modal);
+
+      bloquearRolagemModal();
+
+      var botaoFechar = conteudo.querySelector(".modalClose");
+
+      botaoFechar.focus();
+
+      botaoFechar.addEventListener("click", function() {
+        removerModal(modal);
+      });
+
+      modal.addEventListener("click", function(evento) {
+        if (evento.target === modal) {
+          removerModal(modal);
+        }
+      });
+
+      modal.addEventListener("keydown", function(evento) {
+        if (evento.key === "Escape") {
+          removerModal(modal);
+        }
+      });
+    }
+  </script>
 </body>
 </html>
